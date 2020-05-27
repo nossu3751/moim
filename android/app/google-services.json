@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1022890812992",
+    "firebase_url": "https://moim-cce90.firebaseio.com",
+    "project_id": "moim-cce90",
+    "storage_bucket": "moim-cce90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022890812992:android:c86b812bed56c74bc421a5",
+        "android_client_info": {
+          "package_name": "com.example.moimapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022890812992-th11s8s4v2rlmjf83lhb9mbuo95rm0jj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvWmD14WgFSG5w-r5ZEVN8Z3f2yIZUM9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022890812992-th11s8s4v2rlmjf83lhb9mbuo95rm0jj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1022890812992-p6h5q1euj30pctto57g3d6uj23valq9b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.moimapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

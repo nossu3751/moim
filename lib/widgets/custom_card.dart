@@ -11,6 +11,9 @@ class CustomCard extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20)
+      ),
       elevation: 0,
       child: ListTile(
         title: Text(this.title),

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-class DropDown extends StatefulWidget {
-  @override
-  _DropDownState createState() => _DropDownState();
-}
+class DropDown extends StatelessWidget {
+  final String college;
+  final Function(String) selected;
 
-class _DropDownState extends State<DropDown> {
-  String dropdownValue = 'Mount Holyoke College';
+  const DropDown({Key key, this.college, this.selected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      value: dropdownValue,
+      value: college,
       icon: Icon(Icons.arrow_drop_down),
       iconSize: 24,
       iconDisabledColor: Colors.black,
@@ -22,9 +20,7 @@ class _DropDownState extends State<DropDown> {
         height: 0,
       ),
       onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
+        selected(newValue);
       },
       items: <String>[
         'Mount Holyoke College',

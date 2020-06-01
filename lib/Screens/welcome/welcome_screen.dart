@@ -3,13 +3,12 @@ import 'package:moimapp/Screens/welcome/signup.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  Expanded BuildDivider() {
-    return Expanded(
-      child: Divider(color: Colors.black, height: 1.5),
-    );
-  }
+class WelcomeScreen extends StatefulWidget {
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
 
+class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,7 +44,6 @@ class WelcomeScreen extends StatelessWidget {
                       Icons.lock,
                       color: Colors.grey[900],
                     ),
-                    suffixIcon: Icon(Icons.visibility),
                     border: InputBorder.none),
               ),
             ),
@@ -57,19 +55,9 @@ class WelcomeScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 11, color: Colors.grey[700]),
               ),
             ),
-            // Container(
-            //     width: size.width * 0.8,
-            //     child: Row(
-            //       children: <Widget>[
-            //         BuildDivider(),
-            //         Padding(
-            //           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            //           child: Text('or'),
-            //         ),
-            //         BuildDivider()
-            //       ],
-            //     )),
+
             SizedBox(height: size.height * 0.02),
+            // Button with outline
             // Container(
             //   width: size.width * 0.8,
             //   child: RaisedButton(
@@ -88,7 +76,7 @@ class WelcomeScreen extends StatelessWidget {
             Container(
               width: size.width * 0.8,
               child: RoundedButton(
-                text: 'LOGIN',
+                text: 'Sign In',
                 fillColor: Colors.grey[350],
               ),
             ),
@@ -104,8 +92,10 @@ class WelcomeScreen extends StatelessWidget {
                     return SignUp();
                   })),
                   child: Text(
-                    "Sign Up",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    "Sign in",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 )
               ],
@@ -113,6 +103,12 @@ class WelcomeScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Expanded BuildDivider() {
+    return Expanded(
+      child: Divider(color: Colors.black, height: 1.5),
     );
   }
 }

@@ -41,9 +41,33 @@ class TodoScaffoldState extends State<TodoScaffold>{
                         ),
                         key: Key(document.documentID.toString()),
                         onDismissed: (direction) async {
-                          await widget.completedCollection.add({'name': document['name']});
-                          await widget.collection.document(document.documentID).delete();
-                        }
+                          if(direction == DismissDirection.startToEnd){
+                            await widget.completedCollection.add({'name': document['name']});
+                            await widget.collection.document(document.documentID).delete();
+                          }else if(direction == DismissDirection.endToStart){
+                            await widget.collection.document(document.documentID).delete();
+                          }
+                        },
+                        background: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: new BorderRadius.all(Radius.circular(20)),
+                              color: Colors.green,
+                            ),
+                            child: Icon(Icons.check),
+                          ),
+                        ),
+                        secondaryBackground: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: new BorderRadius.all(Radius.circular(20)),
+                              color: Colors.red,
+                            ),
+                            child: Icon(Icons.cancel),
+                          )
+                        )
 //                        onDismissed:(direction){
 //                          setState(() async{
 //                            await widget.collection.document(document.documentID).delete();

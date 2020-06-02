@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/widgets/completedTaskList.dart';
 import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/timepicker.dart';
 import 'package:moimapp/widgets/todolist.dart';
@@ -54,9 +55,7 @@ class TodoState extends State<Todo> {
               body: TabBarView(
                 children: <Widget> [
                   TodoScaffold(),
-                  Container(
-                    child: Text("Hello"),
-                  )
+                  CompletedTasksList()
                 ]
               )
             )

@@ -17,9 +17,6 @@ class TodoScaffoldState extends State<TodoScaffold>{
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text('Todo App'),
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: widget.collection.snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){

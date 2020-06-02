@@ -31,10 +31,38 @@ class TodoState extends State<Todo> {
       title: 'Todo App',
       initialRoute: '/',
       routes: {
-        '/': (context) => TodoScaffold(),
+//        '/': (context) => TodoScaffold(),
 //        '/': (context) => TodoScaffold(tasks: tasks, onToggle: onTaskToggled,),
+        '/': (context) => DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                  title: const Text('Todo List'),
+                  bottom: TabBar(
+                      tabs: <Widget> [
+                        Tab(
+                            text: "Tasks",
+                            icon: Icon(Icons.note)
+                        ),
+                        Tab(
+                            text: "Complete",
+                            icon: Icon(Icons.check)
+                        )
+                      ]
+                  )
+              ),
+              body: TabBarView(
+                children: <Widget> [
+                  TodoScaffold(),
+                  Container(
+                    child: Text("Hello"),
+                  )
+                ]
+              )
+            )
+        ),
         '/create': (context) => TodoCreate(onCreate: onTaskCreated,),
-      }
+      },
   );
 }
 class TodoPractice extends StatelessWidget {

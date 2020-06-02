@@ -79,7 +79,10 @@ class TodoCreate extends StatefulWidget{
 
 class _TodoCreateState extends State<TodoCreate>{
   final collection = Firestore.instance.collection('rhosung_tasks');
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController taskTitleController = TextEditingController();
+  final TextEditingController taskContentController = TextEditingController();
+  final TextEditingController taskDateTimeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,12 +95,21 @@ class _TodoCreateState extends State<TodoCreate>{
             children: <Widget> [
               TextField(
                   autofocus: true,
-                  controller: controller,
+                  controller: taskTitleController,
                   decoration: InputDecoration(
                       labelText: 'Enter your task item name.'
                   )
               ),
-              BasicDateTimeField(),
+              TextField(
+                autofocus: true,
+                controller: taskContentController,
+                decoration: InputDecoration(
+                  labelText: 'Describe your task item.'
+                )
+              ),
+              BasicDateTimeField(
+                controller:taskDateTimeController,
+              ),
             ]
           )
         )
@@ -105,7 +117,11 @@ class _TodoCreateState extends State<TodoCreate>{
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async{
-          await collection.add({'name': controller.text});
+          await collection.add({
+            'name': taskTitleController.text,
+            'content': taskContentController.text,
+            'due_time': taskDateTimeController.text,
+          });
           Navigator.pop(context);
         }
       )

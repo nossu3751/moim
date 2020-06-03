@@ -31,10 +31,15 @@ class TodoScaffoldState extends State<TodoScaffold>{
                     return Text('No data to show');
                   }else{
                     return Dismissible(
-                        child: Card(
-                            child: ListTile(
-                              title: Text(document['name']),
-                            )
+                        child: Container(
+                          height: 100,
+                          child: Card(
+                              child: Center(
+                                child: ListTile(
+                                  title: Text(document['name']),
+                                )
+                              )
+                          )
                         ),
                         key: Key(document.documentID.toString()),
                         onDismissed: (direction) async {
@@ -52,7 +57,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
                               borderRadius: new BorderRadius.all(Radius.circular(20)),
                               color: Colors.green,
                             ),
-                            child: Icon(Icons.check),
+                            child: Icon(Icons.check, color: Colors.white),
                           ),
                         ),
                         secondaryBackground: Padding(
@@ -62,7 +67,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
                               borderRadius: new BorderRadius.all(Radius.circular(20)),
                               color: Colors.red,
                             ),
-                            child: Icon(Icons.cancel),
+                            child: Icon(Icons.cancel, color: Colors.white),
                           )
                         )
 //                        onDismissed:(direction){
@@ -102,6 +107,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
       floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.pushNamed(context, '/create'),
           child: Icon(Icons.add)
-      )
+      ),
+
   );
 }

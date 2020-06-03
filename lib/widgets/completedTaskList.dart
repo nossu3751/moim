@@ -47,7 +47,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                                 borderRadius: new BorderRadius.all(Radius.circular(20)),
                                 color: Colors.red,
                               ),
-                              child: Icon(Icons.remove),
+                              child: Icon(Icons.delete, color: Colors.white),
                             ),
                           ),
                           secondaryBackground: Padding(
@@ -57,7 +57,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                                   borderRadius: new BorderRadius.all(Radius.circular(20)),
                                   color: Colors.blueAccent,
                                 ),
-                                child: Icon(Icons.arrow_back),
+                                child: Icon(Icons.arrow_back, color: Colors.white),
                               )
                           )
 //                        onDismissed:(direction){
@@ -71,6 +71,38 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                 );
             }
           }
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.redAccent,
+        child: Icon(Icons.delete),
+        onPressed: (){
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                title: Text("Clear completed task list"),
+                content: Text("Would you like to remove all completed task items?"),
+                actions: <Widget> [
+                  FlatButton(
+                      child: Text("Cancel"),
+                      onPressed:(){
+                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                      }
+                  ),
+                  FlatButton(
+                    child: Text("Remove All"),
+                    onPressed:(){
+                      widget.completedCollection.getDocuments().then((snapshot){
+                        for(DocumentSnapshot doc in snapshot.documents){
+                          doc.reference.delete();
+                        }
+                      });
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                    }
+                  )
+                ]
+            )
+          );
+        }
       ),
     );
   }

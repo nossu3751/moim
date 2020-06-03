@@ -37,6 +37,10 @@ class TodoScaffoldState extends State<TodoScaffold>{
                               child: Center(
                                 child: ListTile(
                                   title: Text(document['name']),
+                                  trailing: Text(
+                                    document['due_time'] != null && document['due_time'] != ""?
+                                        document['due_time']:"not specified"
+                                  )
                                 )
                               )
                           )

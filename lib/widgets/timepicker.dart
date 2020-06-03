@@ -159,8 +159,10 @@ class BasicDateTimeFieldState extends State<BasicDateTimeField> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      Text('Basic date & time field (${format.pattern})'),
       DateTimeField(
+        decoration: InputDecoration(
+          labelText: "Enter due date and time if exists."
+        ),
         controller: widget.controller,
         format: format,
         onShowPicker: (context, currentValue) async {

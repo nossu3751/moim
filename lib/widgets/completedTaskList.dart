@@ -20,54 +20,61 @@ class CompletedTasksListState extends State<CompletedTasksList>{
             switch (snapshot.connectionState){
               case ConnectionState.waiting: return Text('Loading...');
               default:
-                return ListView(
-                  children: snapshot.data.documents.map((DocumentSnapshot document){
-                    if(snapshot.data == null) {
-                      return Text('No data to show');
-                    }else{
-                      return Dismissible(
-                          child: Card(
-                              child: ListTile(
-                                title: Text(document['name']),
-                              )
-                          ),
-                          key: Key(document.documentID.toString()),
-                          onDismissed: (direction) async {
-                            if(direction == DismissDirection.startToEnd){
-                              await widget.completedCollection.document(document.documentID).delete();
-                            }else if(direction == DismissDirection.endToStart){
-                              await widget.incompleteCollection.add({'name': document['name']});
-                              await widget.completedCollection.document(document.documentID).delete();
-                            }
-                          },
-                          background: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: new BorderRadius.all(Radius.circular(20)),
-                                color: Colors.red,
-                              ),
-                              child: Icon(Icons.delete, color: Colors.white),
+                return Container(
+                  height: 500,
+                  child:ListView(
+                    children: snapshot.data.documents.map((DocumentSnapshot document){
+                      if(snapshot.data == null) {
+                        return Text('No data to show');
+                      }else{
+                        return Dismissible(
+                            child: Card(
+                                child: ListTile(
+                                  title: Text(document['name']),
+                                )
                             ),
-                          ),
-                          secondaryBackground: Padding(
+                            key: Key(document.documentID.toString()),
+                            onDismissed: (direction) async {
+                              if(direction == DismissDirection.startToEnd){
+                                await widget.completedCollection.document(document.documentID).delete();
+                              }else if(direction == DismissDirection.endToStart){
+                                await widget.incompleteCollection.add({
+                                  'name': document['name'],
+                                  'content': document['content'],
+                                  'due_time': document['due_time']
+                                });
+                                await widget.completedCollection.document(document.documentID).delete();
+                              }
+                            },
+                            background: Padding(
                               padding: EdgeInsets.all(5),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.all(Radius.circular(20)),
-                                  color: Colors.blueAccent,
+                                  color: Colors.red,
                                 ),
-                                child: Icon(Icons.arrow_back, color: Colors.white),
-                              )
-                          )
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
+                            ),
+                            secondaryBackground: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                    color: Colors.blueAccent,
+                                  ),
+                                  child: Icon(Icons.arrow_back, color: Colors.white),
+                                )
+                            )
 //                        onDismissed:(direction){
 //                          setState(() async{
 //                            await widget.collection.document(document.documentID).delete();
 //                          });
 //                        }
-                      );
-                    }
-                  }).toList(),
+                        );
+                      }
+                    }).toList(),
+                  )
                 );
             }
           }

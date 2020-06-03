@@ -26,63 +26,70 @@ class TodoScaffoldState extends State<TodoScaffold>{
           switch (snapshot.connectionState){
             case ConnectionState.waiting: return Text('Loading...');
             default:
-              return ListView(
-                children: snapshot.data.documents.map((DocumentSnapshot document){
-                  if(snapshot.data == null) {
-                    return Text('No data to show');
-                  }else{
-                    return Dismissible(
-                        child: Container(
-                          height: 100,
-                          child: Card(
-                              child: Center(
-                                child: ListTile(
-                                  title: Text(document['name']),
-                                  trailing: Text(
-                                    document['due_time'] != null && document['due_time'] != ""?
-                                        document['due_time']:"not specified"
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.lightBlueAccent
+                ),
+                height: 600,
+                child: ListView(
+                  children: snapshot.data.documents.map((DocumentSnapshot document){
+                    if(snapshot.data == null) {
+                      return Text('No data to show');
+                    }else{
+                      return Dismissible(
+                          child: Container(
+                              height: 100,
+                              child: Card(
+                                  child: Center(
+                                      child: ListTile(
+                                          title: Text(document['name']),
+                                          trailing: Text(
+                                            document['due_time'] != null && document['due_time'] != ""?
+                                            document['due_time']:"not specified",
+                                            style: TextStyle(color: Colors.grey, fontSize: 10),
+                                          )
+                                      )
                                   )
-                                )
+                              )
+                          ),
+                          key: Key(document.documentID.toString()),
+                          onDismissed: (direction) async {
+                            if(direction == DismissDirection.startToEnd){
+                              await widget.completedCollection.add({'name': document['name']});
+                              await widget.collection.document(document.documentID).delete();
+                            }else if(direction == DismissDirection.endToStart){
+                              await widget.collection.document(document.documentID).delete();
+                            }
+                          },
+                          background: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                color: Colors.green,
+                              ),
+                              child: Icon(Icons.check, color: Colors.white),
+                            ),
+                          ),
+                          secondaryBackground: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                  color: Colors.red,
+                                ),
+                                child: Icon(Icons.cancel, color: Colors.white),
                               )
                           )
-                        ),
-                        key: Key(document.documentID.toString()),
-                        onDismissed: (direction) async {
-                          if(direction == DismissDirection.startToEnd){
-                            await widget.completedCollection.add({'name': document['name']});
-                            await widget.collection.document(document.documentID).delete();
-                          }else if(direction == DismissDirection.endToStart){
-                            await widget.collection.document(document.documentID).delete();
-                          }
-                        },
-                        background: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.all(Radius.circular(20)),
-                              color: Colors.green,
-                            ),
-                            child: Icon(Icons.check, color: Colors.white),
-                          ),
-                        ),
-                        secondaryBackground: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.all(Radius.circular(20)),
-                              color: Colors.red,
-                            ),
-                            child: Icon(Icons.cancel, color: Colors.white),
-                          )
-                        )
 //                        onDismissed:(direction){
 //                          setState(() async{
 //                            await widget.collection.document(document.documentID).delete();
 //                          });
 //                        }
-                    );
-                  }
-                }).toList(),
+                      );
+                    }
+                  }).toList(),
+                )
               );
           }
         }

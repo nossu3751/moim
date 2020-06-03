@@ -18,7 +18,8 @@ class TodoScaffoldState extends State<TodoScaffold>{
   @override
   Widget build(BuildContext context) => Scaffold(
       body: StreamBuilder<QuerySnapshot>(
-        stream: widget.collection.snapshots(),
+        // list is ordered by due time
+        stream: widget.collection.orderBy('due_time').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if(snapshot.hasError)
             return Text('Error: ${snapshot.error}');

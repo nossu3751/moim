@@ -15,7 +15,9 @@ void main() => runApp(MaterialApp(
   home: Todo(),
   theme: ThemeData.light().copyWith(
       inputDecorationTheme:
-      InputDecorationTheme(border: OutlineInputBorder())),
+      InputDecorationTheme(border: OutlineInputBorder()),
+      dividerColor: Colors.transparent
+  ),
   localizationsDelegates: [
 //     ... app-specific localization delegate[s] here
     GlobalMaterialLocalizations.delegate,

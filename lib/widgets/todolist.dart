@@ -30,27 +30,30 @@ class TodoScaffoldState extends State<TodoScaffold>{
                 decoration: BoxDecoration(
                   color: Colors.lightBlueAccent
                 ),
-                height: 600,
+                constraints: BoxConstraints.expand(),
                 child: ListView(
                   children: snapshot.data.documents.map((DocumentSnapshot document){
                     if(snapshot.data == null) {
                       return Text('No data to show');
                     }else{
                       return Dismissible(
-                          child: Container(
-                              height: 100,
-                              child: Card(
-                                  child: Center(
-                                      child: ListTile(
-                                          title: Text(document['name']),
-                                          trailing: Text(
-                                            document['due_time'] != null && document['due_time'] != ""?
-                                            document['due_time']:"not specified",
-                                            style: TextStyle(color: Colors.grey, fontSize: 10),
-                                          )
-                                      )
-                                  )
-                              )
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 7, vertical:3),
+                            child: Container(
+                                height: 100,
+                                child: Card(
+                                    child: Center(
+                                        child: ListTile(
+                                            title: Text(document['name']),
+                                            trailing: Text(
+                                              document['due_time'] != null && document['due_time'] != ""?
+                                              document['due_time']:"not specified",
+                                              style: TextStyle(color: Colors.grey, fontSize: 10),
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
                           ),
                           key: Key(document.documentID.toString()),
                           onDismissed: (direction) async {
@@ -117,6 +120,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
 ////      )
 //      ),
       floatingActionButton: FloatingActionButton(
+        elevation: 0,
           onPressed: () => Navigator.pushNamed(context, '/create'),
           child: Icon(Icons.add)
       ),

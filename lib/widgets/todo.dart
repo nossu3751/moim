@@ -38,8 +38,11 @@ class TodoState extends State<Todo> {
             length: 2,
             child: Scaffold(
               appBar: AppBar(
-                  title: const Text('Todo List'),
+                  elevation: 0,
+//                  title: const Text('Todo List'),
+                  title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
                   bottom: TabBar(
+                      indicatorColor: Color(0XFFFFF684),
                       tabs: <Widget> [
                         Tab(
                             text: "Tasks",

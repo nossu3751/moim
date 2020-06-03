@@ -21,7 +21,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
               case ConnectionState.waiting: return Text('Loading...');
               default:
                 return Container(
-                  height: 500,
+                  constraints: BoxConstraints.expand(),
                   child:ListView(
                     children: snapshot.data.documents.map((DocumentSnapshot document){
                       if(snapshot.data == null) {
@@ -80,6 +80,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
           }
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 0,
         backgroundColor: Colors.redAccent,
         child: Icon(Icons.delete),
         onPressed: (){

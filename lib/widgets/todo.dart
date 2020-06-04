@@ -119,10 +119,21 @@ class _TodoCreateState extends State<TodoCreate>{
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async{
+          DateTime dueTime = DateTime.parse(taskDateTimeController.text);
+          String year = dueTime.year.toString();
+          String month = dueTime.month.toString();
+          String date = dueTime.day.toString();
+          String hour = dueTime.hour.toString();
+          String minute = dueTime.minute.toString();
           await collection.add({
             'name': taskTitleController.text,
             'content': taskContentController.text,
             'due_time': taskDateTimeController.text,
+            'year':year,
+            'month': month,
+            'date': date,
+            'hour': hour,
+            'minute': minute,
           });
           Navigator.pop(context);
         }

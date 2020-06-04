@@ -154,7 +154,7 @@ class BasicDateTimeField extends StatefulWidget{
 }
 class BasicDateTimeFieldState extends State<BasicDateTimeField> {
 
-  final format = DateFormat("yyyy-MM-dd HH:mm");
+  final format = DateFormat("yyyy-MM-dd HH:mm:ss");
 
   @override
   Widget build(BuildContext context) {

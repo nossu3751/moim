@@ -41,7 +41,12 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                                 await widget.incompleteCollection.add({
                                   'name': document['name'],
                                   'content': document['content'],
-                                  'due_time': document['due_time']
+                                  'due_time': document['due_time'],
+                                  'year': document['year'],
+                                  'month': document['month'],
+                                  'date': document['date'],
+                                  'hour': document['hour'],
+                                  'minute': document['minute'],
                                 });
                                 await widget.completedCollection.document(document.documentID).delete();
                               }

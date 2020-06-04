@@ -58,7 +58,16 @@ class TodoScaffoldState extends State<TodoScaffold>{
                           key: Key(document.documentID.toString()),
                           onDismissed: (direction) async {
                             if(direction == DismissDirection.startToEnd){
-                              await widget.completedCollection.add({'name': document['name']});
+                              await widget.completedCollection.add({
+                                'name': document['name'],
+                                'content': document['content'],
+                                'due_time': document['due_time'],
+                                'year': document['year'],
+                                'month': document['month'],
+                                'date': document['date'],
+                                'hour': document['hour'],
+                                'minute': document['minute']
+                              });
                               await widget.collection.document(document.documentID).delete();
                             }else if(direction == DismissDirection.endToStart){
                               await widget.collection.document(document.documentID).delete();

@@ -32,81 +32,86 @@ class TodoScaffoldState extends State<TodoScaffold>{
                   color: Colors.lightBlueAccent
                 ),
                 constraints: BoxConstraints.expand(),
-                child: ListView(
-                  children: snapshot.data.documents.map((DocumentSnapshot document){
-                    if(snapshot.data == null) {
-                      return Text('No data to show');
-                    }else{
-                      return Dismissible(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 7, vertical:3),
-                            child: Container(
-                                height: 100,
-                                child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: Center(
-                                        child: ListTile(
-                                            title: Text(document['name']),
-                                            trailing: Text(
+                child: RefreshIndicator(
+                  onRefresh: () async{
+                    return null;
+                  },
+                  child: ListView(
+                    children: snapshot.data.documents.map((DocumentSnapshot document){
+                      if(snapshot.data == null) {
+                        return Text('No data to show');
+                      }else{
+                        return Dismissible(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 7, vertical:3),
+                              child: Container(
+                                  height: 100,
+                                  child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20)
+                                      ),
+                                      child: Center(
+                                          child: ListTile(
+                                              title: Text(document['name']),
+                                              trailing: Text(
 //                                              document['due_time'] != null && document['due_time'] != ""?
 //                                              document['due_time']:"not specified",
-                                              document['due_time'] != null && document['due_time'] != "" ?
-                                              (dDay(document['due_time'])):"not specified",
-                                              style: TextStyle(color: Colors.grey, fontSize: 10),
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                          ),
-                          key: Key(document.documentID.toString()),
-                          onDismissed: (direction) async {
-                            if(direction == DismissDirection.startToEnd){
-                              await widget.completedCollection.add({
-                                'name': document['name'],
-                                'content': document['content'],
-                                'due_time': document['due_time'],
-                                'year': document['year'],
-                                'month': document['month'],
-                                'date': document['date'],
-                                'hour': document['hour'],
-                                'minute': document['minute'],
-                              });
-                              await widget.collection.document(document.documentID).delete();
-                            }else if(direction == DismissDirection.endToStart){
-                              await widget.collection.document(document.documentID).delete();
-                            }
-                          },
-                          background: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: new BorderRadius.all(Radius.circular(20)),
-                                color: Colors.green,
+                                                document['due_time'] != null && document['due_time'] != "" ?
+                                                (dDay(document['due_time'])):"not specified",
+                                                style: TextStyle(color: Colors.grey, fontSize: 10),
+                                              )
+                                          )
+                                      )
+                                  )
                               ),
-                              child: Icon(Icons.check, color: Colors.white),
                             ),
-                          ),
-                          secondaryBackground: Padding(
+                            key: Key(document.documentID.toString()),
+                            onDismissed: (direction) async {
+                              if(direction == DismissDirection.startToEnd){
+                                await widget.completedCollection.add({
+                                  'name': document['name'],
+                                  'content': document['content'],
+                                  'due_time': document['due_time'],
+                                  'year': document['year'],
+                                  'month': document['month'],
+                                  'date': document['date'],
+                                  'hour': document['hour'],
+                                  'minute': document['minute'],
+                                });
+                                await widget.collection.document(document.documentID).delete();
+                              }else if(direction == DismissDirection.endToStart){
+                                await widget.collection.document(document.documentID).delete();
+                              }
+                            },
+                            background: Padding(
                               padding: EdgeInsets.all(5),
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: new BorderRadius.all(Radius.circular(20)),
-                                  color: Colors.red,
+                                  color: Colors.green,
                                 ),
-                                child: Icon(Icons.cancel, color: Colors.white),
-                              )
-                          )
+                                child: Icon(Icons.check, color: Colors.white),
+                              ),
+                            ),
+                            secondaryBackground: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                    color: Colors.red,
+                                  ),
+                                  child: Icon(Icons.cancel, color: Colors.white),
+                                )
+                            )
 //                        onDismissed:(direction){
 //                          setState(() async{
 //                            await widget.collection.document(document.documentID).delete();
 //                          });
 //                        }
-                      );
-                    }
-                  }).toList(),
+                        );
+                      }
+                    }).toList(),
+                  )
                 )
               );
           }

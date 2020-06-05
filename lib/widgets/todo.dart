@@ -30,6 +30,7 @@ class TodoState extends State<Todo> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Todo App',
       initialRoute: '/',
       routes: {

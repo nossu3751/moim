@@ -11,6 +11,7 @@ import 'package:moimapp/widgets/todoapp.dart';
 import 'package:intl/intl.dart';
 
 void main() => runApp(MaterialApp(
+  debugShowCheckedModeBanner: false,
   title: appName,
   home: Todo(),
   theme: ThemeData.light().copyWith(

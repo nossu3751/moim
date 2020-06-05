@@ -47,7 +47,6 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                                   'date': document['date'],
                                   'hour': document['hour'],
                                   'minute': document['minute'],
-                                  'd_day': document['d_day'],
                                 });
                                 await widget.completedCollection.document(document.documentID).delete();
                               }

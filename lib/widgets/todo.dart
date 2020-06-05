@@ -137,7 +137,6 @@ class _TodoCreateState extends State<TodoCreate>{
             'date': date,
             'hour': hour,
             'minute': minute,
-            'd_day': taskDateTimeController.text == ""?"":dDay(taskDateTimeController.text),
           });
           Navigator.pop(context);
         }

@@ -4,6 +4,7 @@ import 'package:moimapp/widgets/completedTaskList.dart';
 import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/timepicker.dart';
 import 'package:moimapp/widgets/todolist.dart';
+import 'package:moimapp/widgets/d_date_calculator.dart';
 import 'custom_card.dart';
 
 
@@ -119,12 +120,14 @@ class _TodoCreateState extends State<TodoCreate>{
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.done),
         onPressed: () async{
-          DateTime dueTime = DateTime.parse(taskDateTimeController.text);
-          String year = dueTime.year.toString();
-          String month = dueTime.month.toString();
-          String date = dueTime.day.toString();
-          String hour = dueTime.hour.toString();
-          String minute = dueTime.minute.toString();
+          DateTime dueTime = taskDateTimeController.text == ""?null:DateTime.parse(taskDateTimeController.text);
+//          DateTime rightNow = DateTime.now();
+//          String difference = dueTime.difference(rightNow).inDays.toString();
+          String year = dueTime == null?"":dueTime.year.toString();
+          String month = dueTime == null?"":dueTime.month.toString();
+          String date = dueTime == null?"":dueTime.day.toString();
+          String hour = dueTime == null?"":dueTime.hour.toString();
+          String minute = dueTime == null?"":dueTime.minute.toString();
           await collection.add({
             'name': taskTitleController.text,
             'content': taskContentController.text,
@@ -134,6 +137,7 @@ class _TodoCreateState extends State<TodoCreate>{
             'date': date,
             'hour': hour,
             'minute': minute,
+            'd_day': taskDateTimeController.text == ""?"":dDay(taskDateTimeController.text),
           });
           Navigator.pop(context);
         }

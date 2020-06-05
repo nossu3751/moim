@@ -46,8 +46,10 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                         child: ListTile(
                                             title: Text(document['name']),
                                             trailing: Text(
-                                              document['due_time'] != null && document['due_time'] != ""?
-                                              document['due_time']:"not specified",
+//                                              document['due_time'] != null && document['due_time'] != ""?
+//                                              document['due_time']:"not specified",
+                                              document['d_day'] != null && document['d_day'] != "" ?
+                                                  "D - " + document['d_day']:"not specified",
                                               style: TextStyle(color: Colors.grey, fontSize: 10),
                                             )
                                         )
@@ -66,7 +68,8 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                 'month': document['month'],
                                 'date': document['date'],
                                 'hour': document['hour'],
-                                'minute': document['minute']
+                                'minute': document['minute'],
+                                'd_day': document['d_day'],
                               });
                               await widget.collection.document(document.documentID).delete();
                             }else if(direction == DismissDirection.endToStart){

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:moimapp/widgets/d_date_calculator.dart';
+import 'package:moimapp/widgets/highlight_text.dart';
 import 'package:moimapp/widgets/task.dart';
 
 class TodoScaffold extends StatefulWidget{
@@ -60,13 +61,16 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                       child: Center(
                                           child: ListTile(
                                               title: Text(document['name']),
-                                              trailing: Text(
-//                                              document['due_time'] != null && document['due_time'] != ""?
-//                                              document['due_time']:"not specified",
-                                                document['due_time'] != null && document['due_time'] != "" ?
-                                                (dDay(document['due_time'])):"not specified",
-                                                style: TextStyle(color: Colors.grey, fontSize: 10),
-                                              )
+                                              trailing: document['due_time'] == null || document['due_time'] == ""?
+                                                  Text("not specified", style:TextStyle(color: Colors.grey, fontSize: 10)):
+                                                  HighlightText(text:dDay(document['due_time']), fontStyle:TextStyle(color: Colors.grey, fontSize: 10))
+//                                              trailing: Text(
+////                                              document['due_time'] != null && document['due_time'] != ""?
+////                                              document['due_time']:"not specified",
+//                                                document['due_time'] != null && document['due_time'] != "" ?
+//                                                (dDay(document['due_time'])):"not specified",
+//                                                style: TextStyle(color: Colors.grey, fontSize: 10),
+//                                              )
                                           )
                                       )
                                   )

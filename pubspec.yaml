@@ -40,6 +40,7 @@ dependencies:
     git:
       url: https://github.com/nossu3751/flutter_rounded_date_picker
   flutter_local_notifications: 1.4.4
+  autocomplete_textfield: 1.7.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

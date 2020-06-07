@@ -4,7 +4,11 @@ import 'package:moimapp/widgets/completedTaskList.dart';
 import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/timepicker.dart';
 import 'package:moimapp/widgets/todolist.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+
+
 import 'package:moimapp/widgets/d_date_calculator.dart';
+import 'package:moimapp/widgets/todolist_builder.dart';
 import 'custom_card.dart';
 
 
@@ -83,9 +87,43 @@ class TodoCreate extends StatefulWidget{
 
 class _TodoCreateState extends State<TodoCreate>{
   final collection = Firestore.instance.collection('rhosung_tasks');
+  final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
+  final TextEditingController taskTestController = TextEditingController();
   final TextEditingController taskTitleController = TextEditingController();
   final TextEditingController taskContentController = TextEditingController();
   final TextEditingController taskDateTimeController = TextEditingController();
+  AutoCompleteTextField searchTextField;
+  static List<String> completedTaskTitle;
+  @override
+  void initState(){
+    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
+  }
+  GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
+
+//  @override
+//  void initState(){
+//    super.initState();
+//    completedCollection.getDocuments().then((snapshot) async {
+//      for(DocumentSnapshot doc in snapshot.documents){
+//        await completedTaskTitle.add(doc['name']);
+//      }
+//    });
+//  }
+//
+  Widget row(String str){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          str,
+          style: TextStyle(fontSize: 16.0),
+        ),
+        SizedBox(
+          width: 10.0
+        ),
+      ]
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +135,38 @@ class _TodoCreateState extends State<TodoCreate>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget> [
-              TextField(
-                  autofocus: true,
-                  controller: taskTitleController,
-                  decoration: InputDecoration(
-                      labelText: 'Enter your task item name.'
-                  )
+              searchTextField = AutoCompleteTextField<String>(
+                clearOnSubmit: false,
+                itemSubmitted: (item){
+                  setState((){
+                    searchTextField.textField.controller.text = item;
+                  });
+                },
+                style: TextStyle(color: Colors.black, fontSize: 16.0),
+                key: taskkey,
+                suggestions: completedTaskTitle,
+                itemBuilder: (context, item){
+                  return row(item);
+                },
+                itemSorter: (a,b){
+                  return a.compareTo(b);
+                },
+                itemFilter: (item, query){
+                  return item.toLowerCase().startsWith(query.toLowerCase());
+                },
+                decoration: InputDecoration(
+                  labelText: 'Enter your task item name.'
+                ),
               ),
+//              TextField(
+//                  autofocus: true,
+//                  controller: taskTitleController,
+//                  decoration: InputDecoration(
+//                      labelText: 'Enter your task item name.'
+//                  )
+//              ),
               TextField(
-                autofocus: true,
+                autofocus: false,
                 controller: taskContentController,
                 decoration: InputDecoration(
                   labelText: 'Describe your task item.'
@@ -130,7 +191,7 @@ class _TodoCreateState extends State<TodoCreate>{
           String hour = dueTime == null?"":dueTime.hour.toString();
           String minute = dueTime == null?"":dueTime.minute.toString();
           await collection.add({
-            'name': taskTitleController.text,
+            'name': searchTextField.textField.controller.text,
             'content': taskContentController.text,
             'due_time': taskDateTimeController.text,
             'year':year,

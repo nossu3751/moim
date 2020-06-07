@@ -18,7 +18,12 @@ class CompletedTasksListState extends State<CompletedTasksList>{
             if(snapshot.hasError)
               return Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState){
-              case ConnectionState.waiting: return Text('Loading...');
+              case ConnectionState.waiting:
+                return Container(
+                    child: Center(
+                        child: CircularProgressIndicator()
+                    )
+                );
               default:
                 return Container(
                   constraints: BoxConstraints.expand(),

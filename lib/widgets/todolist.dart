@@ -25,15 +25,21 @@ class TodoScaffoldState extends State<TodoScaffold>{
           if(snapshot.hasError)
             return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState){
-            case ConnectionState.waiting: return Text('Loading...');
+            case ConnectionState.waiting:
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator()
+                )
+              );
             default:
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent
+                  color: Colors.white
                 ),
                 constraints: BoxConstraints.expand(),
                 child: RefreshIndicator(
                   onRefresh: () async{
+                    await Future.delayed(Duration(seconds: 2));
                     return null;
                   },
                   child: ListView(
@@ -43,12 +49,13 @@ class TodoScaffoldState extends State<TodoScaffold>{
                       }else{
                         return Dismissible(
                             child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 7, vertical:3),
+                              padding: EdgeInsets.all(0),
                               child: Container(
-                                  height: 100,
+                                  height: 90,
                                   child: Card(
+                                    elevation: 0,
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20)
+                                          borderRadius: BorderRadius.circular(0)
                                       ),
                                       child: Center(
                                           child: ListTile(
@@ -71,12 +78,12 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                 await widget.completedCollection.add({
                                   'name': document['name'],
                                   'content': document['content'],
-                                  'due_time': document['due_time'],
-                                  'year': document['year'],
-                                  'month': document['month'],
-                                  'date': document['date'],
-                                  'hour': document['hour'],
-                                  'minute': document['minute'],
+                                  'due_time': "",
+                                  'year': "",
+                                  'month': "",
+                                  'date': "",
+                                  'hour': "",
+                                  'minute': "",
                                 });
                                 await widget.collection.document(document.documentID).delete();
                               }else if(direction == DismissDirection.endToStart){
@@ -84,20 +91,20 @@ class TodoScaffoldState extends State<TodoScaffold>{
                               }
                             },
                             background: Padding(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.all(0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                  borderRadius: new BorderRadius.all(Radius.circular(0)),
                                   color: Colors.green,
                                 ),
                                 child: Icon(Icons.check, color: Colors.white),
                               ),
                             ),
                             secondaryBackground: Padding(
-                                padding: EdgeInsets.all(5),
+                                padding: EdgeInsets.all(0),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.all(Radius.circular(20)),
+                                    borderRadius: new BorderRadius.all(Radius.circular(0)),
                                     color: Colors.red,
                                   ),
                                   child: Icon(Icons.cancel, color: Colors.white),
@@ -117,28 +124,6 @@ class TodoScaffoldState extends State<TodoScaffold>{
           }
         }
       ),
-//      body: ListView.builder(
-//        itemCount: widget.tasks.length,
-//        itemBuilder: (context, index) {
-//          return Dismissible(
-//            child: Card(
-//                child: ListTile(
-//                    title: Text(widget.tasks[index].getName())
-//                )
-//            ),
-//            key: Key(widget.tasks[index].getName()),
-//            direction: DismissDirection.startToEnd,
-//            onDismissed: (direction){
-//              setState(() {
-//                widget.tasks.removeAt(index);
-//              });
-//            },
-//          );
-//        },
-////      itemBuilder: (context, index) => ListTile(
-////        title: Text(tasks[index].getName())
-////      )
-//      ),
       floatingActionButton: FloatingActionButton(
         elevation: 0,
           onPressed: () => Navigator.pushNamed(context, '/create'),

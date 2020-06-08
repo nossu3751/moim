@@ -15,7 +15,7 @@ class TodoListBuilderState extends State<TodoListBuilder>{
   }
 }
 
-List<String> completedTaskListBuilder(CollectionReference firebaseCollection, List<String> list){
+List<String> completedTaskListBuilder (CollectionReference firebaseCollection, List<String> list) {
   firebaseCollection.getDocuments().then((snapshot) {
     for(DocumentSnapshot doc in snapshot.documents){
       list.add(doc['name']);

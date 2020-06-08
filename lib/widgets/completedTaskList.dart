@@ -36,6 +36,29 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                             child: Card(
                                 child: ListTile(
                                   title: Text(document['name']),
+                                  trailing: Text(
+                                      "completed on " + document['completed_on'],
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 8,
+                                    )
+                                  )
+//                                  trailing: Center(
+//                                    child: Container(
+//                                      height: 50,
+//                                      width: 100,
+//                                      child:Column(
+//                                          children: <Widget> [
+//                                            Text(
+//                                                document['completed_weekday']
+//                                            ),
+//                                            Text(
+//                                                document['completed_on']
+//                                            )
+//                                          ]
+//                                      )
+//                                    )
+//                                  )
                                 )
                             ),
                             key: Key(document.documentID.toString()),

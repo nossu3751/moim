@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moimapp/widgets/d_date_calculator.dart';
 import 'package:moimapp/widgets/highlight_text.dart';
 import 'package:moimapp/widgets/task.dart';
@@ -40,7 +41,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
                 constraints: BoxConstraints.expand(),
                 child: RefreshIndicator(
                   onRefresh: () async{
-                    await Future.delayed(Duration(seconds: 2));
+                    await Future.delayed(Duration(milliseconds: 1500));
                     return null;
                   },
                   child: ListView(
@@ -78,6 +79,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
                             ),
                             key: Key(document.documentID.toString()),
                             onDismissed: (direction) async {
+
                               if(direction == DismissDirection.startToEnd){
                                 await widget.completedCollection.add({
                                   'name': document['name'],
@@ -88,6 +90,8 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                   'date': "",
                                   'hour': "",
                                   'minute': "",
+                                  'completed_on': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()).toString(),
+                                  'completed_weekday': DateFormat("EEEE").format(DateTime.now()).toString()
                                 });
                                 await widget.collection.document(document.documentID).delete();
                               }else if(direction == DismissDirection.endToStart){

@@ -95,9 +95,10 @@ class _TodoCreateState extends State<TodoCreate>{
   AutoCompleteTextField searchTextField;
   static List<String> completedTaskTitle;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
+    completedTaskTitle = ["aaa","bbb","ccc","ddd","eee","fff","ggg","hhh","iii"];
+//    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
   }
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
 

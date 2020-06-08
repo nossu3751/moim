@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/Screens/messages/message_home.dart';
 import 'package:moimapp/Screens/welcome/signup.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input.dart';
+import 'package:moimapp/Widgets/round_input_forLogin.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
+import 'package:moimapp/services/auth.dart';
+import 'package:moimapp/services/database_methods.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -9,6 +15,60 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String text = " ";
+  bool isLoading = false;
+  QuerySnapshot snapshotUserInfo;
+  final formKey = GlobalKey<FormState>();
+
+  AuthMethods authMethods = new AuthMethods();
+  DatabaseMethods databaseMethods = new DatabaseMethods();
+  TextEditingController emailTextEditingContoller = new TextEditingController();
+  TextEditingController passwordTextEditingContoller =
+      new TextEditingController();
+
+  signIn() {
+    //TODO : implement SignIn()
+    //TODO : how to implement validate ...
+    // Right now always return true so always sign in ()
+    //TODO haven't check if the password match the useremail!!!
+    // if @mtholyoke -> then mount holyoke...
+    if (formKey.currentState.validate()) {
+      HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
+      setState(() {
+        isLoading = true;
+      });
+
+      databaseMethods
+          .getUserByEmail(
+              'Mount Holyoke College', emailTextEditingContoller.text)
+          .then((val) {
+        snapshotUserInfo = val;
+        HelperFunctions.saveUserNamePreference(
+            snapshotUserInfo.documents[0].data['name']);
+        HelperFunctions.saveUserCollegePreference(
+            snapshotUserInfo.documents[0].data['college']);
+      });
+
+      authMethods
+          .signInWithEmailAndPassword(
+              emailTextEditingContoller.text, passwordTextEditingContoller.text)
+          .then((val) {
+        if (val != null) {
+          HelperFunctions.saveUserLogInPreference(true);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MessageHome()),
+            (Route<dynamic> route) => false,
+          );
+        } else {
+          setState(() {
+            text = "    User doesn't exist.";
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,32 +81,80 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               'images/Moim_logo.png',
               height: size.height / 7.5,
             ),
-            SizedBox(height: size.height * 0.05),
-            RoundedInput(
-              size: size,
-              icon: Icons.email,
-              hintText: "College Email",
-            ),
-
-            SizedBox(height: size.height * 0.01),
-            Container(
-              padding: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                  // border: new Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey[50]),
-              width: size.width * 0.8,
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: 'Password',
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.grey[900],
+            SizedBox(height: size.height * 0.03),
+            Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    text,
+                    style: TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  RoundedInputWithController(
+                    size: size,
+                    textFormField: TextFormField(
+                      controller: emailTextEditingContoller,
+                      validator: (val) {},
+                      decoration: InputDecoration(
+                          hintText: "College Email",
+                          icon: Icon(
+                            Icons.email,
+                            color: Colors.grey[900],
+                          ),
+                          border: InputBorder.none),
                     ),
-                    border: InputBorder.none),
+                  ),
+                  SizedBox(height: size.height * 0.01),
+                  Container(
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(
+                        // border: new Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey[100]),
+                    width: size.width * 0.8,
+                    child: TextFormField(
+                      controller: passwordTextEditingContoller,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                          hintText: 'Password',
+                          icon: Icon(
+                            Icons.lock,
+                            color: Colors.grey[900],
+                          ),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            // RoundedInput(
+            //   size: size,
+            //   icon: Icons.email,
+            //   hintText: "College Email",
+            // ),
+
+            // SizedBox(height: size.height * 0.01),
+            // Container(
+            //   padding: EdgeInsets.only(left: 10),
+            //   decoration: BoxDecoration(
+            //       // border: new Border.all(color: Colors.black),
+            //       borderRadius: BorderRadius.circular(20),
+            //       color: Colors.grey[50]),
+            //   width: size.width * 0.8,
+            //   child: TextField(
+            //     obscureText: true,
+            //     decoration: InputDecoration(
+            //         hintText: 'Password',
+            //         icon: Icon(
+            //           Icons.lock,
+            //           color: Colors.grey[900],
+            //         ),
+            //         border: InputBorder.none),
+            //   ),
+            // ),
             Container(
               width: size.width * 0.8,
               alignment: Alignment.bottomRight,
@@ -76,6 +184,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Container(
               width: size.width * 0.8,
               child: RoundedButton(
+                press: () => signIn(),
+                // press: () {},
                 text: 'Sign In',
                 fillColor: Colors.grey[350],
               ),
@@ -87,12 +197,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: <Widget>[
                 Text("Don't have an Account? "),
                 GestureDetector(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                    return SignUp();
-                  })),
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
                   child: Text(
-                    "Sign in",
+                    "Sign up",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

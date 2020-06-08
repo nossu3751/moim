@@ -5,6 +5,7 @@ import 'package:moimapp/Widgets/dropdown.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input_forLogin.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/services/auth.dart';
 import 'package:moimapp/services/database_methods.dart';
 
@@ -44,6 +45,12 @@ class _SignUpState extends State<SignUp> {
           'email': emailTextEditingContoller.text,
           'college': widget.college,
         };
+
+        HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
+        HelperFunctions.saveUserCollegePreference(widget.college);
+        HelperFunctions.saveUserNamePreference(
+            usernameTextEditingContoller.text);
+
         databaseMethods.uploadUserInfo(widget.college, userInfoMap);
 
         Navigator.pushAndRemoveUntil(
@@ -107,7 +114,6 @@ class _SignUpState extends State<SignUp> {
                                   widget.college = val;
                                 }),
                               ),
-                              // DropDown(college: widget.college),
                             ],
                           )),
 

@@ -94,10 +94,12 @@ class _TodoCreateState extends State<TodoCreate>{
   final TextEditingController taskDateTimeController = TextEditingController();
   AutoCompleteTextField searchTextField;
   static List<String> completedTaskTitle;
-  @override
+
+//  @override
   void initState() {
+//    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
     super.initState();
-    completedTaskTitle = ["aaa","bbb","ccc","ddd","eee","fff","ggg","hhh","iii"];
+    completedTaskTitle = [];
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
   }
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
@@ -146,7 +148,7 @@ class _TodoCreateState extends State<TodoCreate>{
                 },
                 style: TextStyle(color: Colors.black, fontSize: 16.0),
                 key: taskkey,
-                suggestions: completedTaskTitle,
+                suggestions: completedTaskListBuilder(completedCollection, completedTaskTitle),
                 itemBuilder: (context, item){
                   return row(item);
                 },

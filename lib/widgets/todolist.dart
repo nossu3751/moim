@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:moimapp/widgets/d_date_calculator.dart';
 import 'package:moimapp/widgets/highlight_text.dart';
 import 'package:moimapp/widgets/task.dart';
+import 'package:moimapp/widgets/custom_expansion_tile.dart';
 
 class TodoScaffold extends StatefulWidget{
 //  final List<Task> tasks;
@@ -132,11 +134,51 @@ class TodoScaffoldState extends State<TodoScaffold>{
           }
         }
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: SpeedDial(
+        marginRight: 18,
+        marginBottom: 20,
+        animatedIcon: AnimatedIcons.menu_close,
+        animatedIconTheme: IconThemeData(size: 22.0),
+        closeManually: false,
+        curve: Curves.bounceIn,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        tooltip: 'Speed Dial',
+        heroTag: 'speed-dial-hero-tag',
         elevation: 0,
-          onPressed: () => Navigator.pushNamed(context, '/create'),
-          child: Icon(Icons.add)
-      ),
+        backgroundColor: Colors.lightBlueAccent,
+        foregroundColor: Colors.white,
+        shape: CircleBorder(),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.note_add),
+              backgroundColor: Colors.white70,
+              label: 'Add Item',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () => Navigator.pushNamed(context, '/create')
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.library_add),
+            backgroundColor: Colors.white70,
+            label: 'Add Category',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => print('SECOND CHILD'),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.share),
+            backgroundColor: Colors.white70,
+            label: 'Share',
+            labelStyle: TextStyle(fontSize: 18.0),
+            onTap: () => print('THIRD CHILD'),
+          ),
+        ]
+
+      )
+//      floatingActionButton: FloatingActionButton(
+//        elevation: 0,
+//          onPressed: () => Navigator.pushNamed(context, '/create'),
+//          child: Icon(Icons.add)
+//      ),
 
   );
 }

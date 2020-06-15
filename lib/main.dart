@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moimapp/Screens/schedule.dart';
 import 'package:moimapp/Screens/welcome/signup.dart';
 import 'package:moimapp/Screens/welcome/welcome_screen.dart';
 import 'package:moimapp/Screens/homepage.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: WelcomeScreen(),
+      home: SchedulePage(),
     );
   }
 }

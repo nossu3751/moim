@@ -10,12 +10,13 @@ class Header extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: Card(
+        color: Colors.transparent,
         margin: EdgeInsets.fromLTRB(0, 0, 0, 2.0),
         child: Row(
             children: dates
                 .map((day) => Expanded(child: Center(child: Text(day))))
                 .toList()),
-        elevation: 8.0,
+        elevation: 0,
       ),
     );
   }

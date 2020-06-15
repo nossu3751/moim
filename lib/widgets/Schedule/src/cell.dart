@@ -16,7 +16,7 @@ class Cell extends StatefulWidget {
     @required this.onCellTapped,
     this.cellColor = Colors.white,
     this.cellSelectedColor = Colors.black,
-    this.boarderColor = Colors.grey,
+    this.boarderColor = Colors.black,
   });
 
   @override
@@ -46,12 +46,12 @@ class _CellState extends State<Cell> {
             decoration: BoxDecoration(
               color: currentColor,
               border: Border(
-                top: BorderSide(width: 1.0, color: widget.boarderColor),
+                top: BorderSide(width: 0.0, color: widget.boarderColor),
                 left: BorderSide(width: 0.0, color: widget.boarderColor),
                 right: BorderSide(width: 0.0, color: widget.boarderColor),
               ),
             ),
-            height: 58.0,
+            height: 47.0,
             duration: Duration(milliseconds: 500),
             curve: Curves.fastOutSlowIn,
           ),

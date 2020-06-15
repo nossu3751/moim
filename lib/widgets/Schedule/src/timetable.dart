@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weekly_timetable/src/cell.dart';
-import 'package:weekly_timetable/src/header.dart';
-import 'package:weekly_timetable/src/indicator.dart';
-import 'package:weekly_timetable/src/weekly_times.dart';
+import 'package:moimapp/widgets/Schedule/src/cell.dart';
+import 'package:moimapp/widgets/Schedule/src/header.dart';
+import 'package:moimapp/widgets/Schedule/src/indicator.dart';
+import 'package:moimapp/widgets/Schedule/src/weekly_times.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WeeklyTimeTable extends StatefulWidget {
   final ValueChanged<Map<int, List<int>>> onValueChanged;
@@ -12,23 +13,24 @@ class WeeklyTimeTable extends StatefulWidget {
   final Map<int, List<int>> initialSchedule;
   final bool draggable;
   final String locale;
+  final bool scrollable;
 
   WeeklyTimeTable({
     this.cellColor = Colors.white,
     this.cellSelectedColor = Colors.black,
-    this.boarderColor = Colors.grey,
+    this.boarderColor = Colors.black,
     this.initialSchedule = const {
-      0: [],
+      0: [1,2,3],
       1: [],
-      2: [],
+      2: [1],
       3: [],
       4: [],
       5: [],
-      6: [],
     },
     this.draggable = false,
     this.locale = "en",
     this.onValueChanged,
+    this.scrollable = true,
   });
 
   @override
@@ -54,12 +56,14 @@ class _WeeklyTimeTableState extends State<WeeklyTimeTable> {
 
   @override
   Widget build(BuildContext context) {
+    bool scrollPhysics = widget.scrollable;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Header(WeeklyTimes.dates[this.locale]),
-        Expanded(
+        Header(WeeklyTimes.dates[this.locale],),
+        Container(
           child: ListView.builder(
+            physics: scrollPhysics? const  NeverScrollableScrollPhysics(): const AlwaysScrollableScrollPhysics(),
             itemCount: WeeklyTimes.times[this.locale].length,
             shrinkWrap: true,
             scrollDirection: Axis.vertical,

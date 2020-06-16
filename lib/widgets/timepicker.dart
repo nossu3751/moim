@@ -173,7 +173,7 @@ class BasicDateTimeFieldState extends State<BasicDateTimeField> {
               initialDate: currentValue ?? DateTime.now(),
               lastDate: DateTime(2100),
               borderRadius: 16,
-              theme: ThemeData(primarySwatch: Colors.deepPurple),
+              theme: ThemeData(primarySwatch: Colors.blue),
               styleDatePicker: MaterialRoundedDatePickerStyle(
                 textStyleDayButton: TextStyle(fontSize: 30, color: Colors.white),
                 textStyleYearButton: TextStyle(
@@ -189,7 +189,7 @@ class BasicDateTimeFieldState extends State<BasicDateTimeField> {
                 TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                 textStyleDayOnCalendar: TextStyle(fontSize: 20, color: Colors.white),
                 textStyleDayOnCalendarSelected:
-                TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                TextStyle(fontSize: 20, color: Colors.lightBlueAccent, fontWeight: FontWeight.bold),
                 textStyleDayOnCalendarDisabled: TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.1)),
                 textStyleMonthYearHeader:
                 TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
@@ -208,17 +208,17 @@ class BasicDateTimeFieldState extends State<BasicDateTimeField> {
                 textStyleButtonPositive:
                 TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
                 textStyleButtonNegative: TextStyle(fontSize: 20, color: Colors.white.withOpacity(0.5)),
-                decorationDateSelected: BoxDecoration(color: Colors.orange[600], shape: BoxShape.circle),
-                backgroundPicker: Colors.deepPurple[400],
-                backgroundActionBar: Colors.deepPurple[300],
-                backgroundHeaderMonth: Colors.deepPurple[300],
+                decorationDateSelected: BoxDecoration(color: Colors.yellowAccent, shape: BoxShape.circle),
+                backgroundPicker: Colors.lightBlueAccent,
+                backgroundActionBar: Colors.lightBlueAccent,
+                backgroundHeaderMonth: Colors.lightBlueAccent,
               ),
               styleYearPicker: MaterialRoundedYearPickerStyle(
                 textStyleYear: TextStyle(fontSize: 40, color: Colors.white),
                 textStyleYearSelected:
                 TextStyle(fontSize: 56, color: Colors.white, fontWeight: FontWeight.bold),
                 heightYearRow: 100,
-                backgroundPicker: Colors.deepPurple[400],
+                backgroundPicker: Colors.lightBlueAccent,
               )
           );
 //          final date = await showDatePicker(
@@ -230,7 +230,7 @@ class BasicDateTimeFieldState extends State<BasicDateTimeField> {
             final time = await showRoundedTimePicker(
                 context: context,
                 initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-                theme: ThemeData(primarySwatch: Colors.deepPurple),
+                theme: ThemeData(primarySwatch: Colors.blue),
             );
 //            final time = await showTimePicker(
 //              context: context,

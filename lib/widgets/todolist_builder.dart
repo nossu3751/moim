@@ -24,3 +24,7 @@ List<String> completedTaskListBuilder (CollectionReference firebaseCollection, L
   return list;
 }
 
+List<String> taskCategoryBuilder (CollectionReference firebaseCollection, List<String> list, String userId) {
+  firebaseCollection.document(userId).snapshots();
+  return list;
+}

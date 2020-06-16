@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/widgets/calender_height_calculator.dart';
 import 'package:moimapp/widgets/completedTaskList.dart';
 import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/timepicker.dart';
+import 'package:moimapp/widgets/todo_create_category.dart';
 import 'package:moimapp/widgets/todolist.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 
@@ -31,6 +33,7 @@ class TodoState extends State<Todo> {
       task.setCompleted(!task.isCompleted());
     });
   }
+
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -70,6 +73,7 @@ class TodoState extends State<Todo> {
             )
         ),
         '/create': (context) => TodoCreate(onCreate: onTaskCreated,),
+        '/create_category': (context) => TodoCreateCategory(),
       },
   );
 }
@@ -88,12 +92,15 @@ class TodoCreate extends StatefulWidget{
 class _TodoCreateState extends State<TodoCreate>{
   final collection = Firestore.instance.collection('rhosung_tasks');
   final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
+  final taskCategory = Firestore.instance.collection('rhosungTasksCategories');
   final TextEditingController taskTestController = TextEditingController();
   final TextEditingController taskTitleController = TextEditingController();
   final TextEditingController taskContentController = TextEditingController();
   final TextEditingController taskDateTimeController = TextEditingController();
   AutoCompleteTextField searchTextField;
   static List<String> completedTaskTitle;
+  static List<String> tasksCategory;
+  var selectedCategory;
 
 //  @override
   void initState() {
@@ -101,6 +108,8 @@ class _TodoCreateState extends State<TodoCreate>{
     super.initState();
     completedTaskTitle = [];
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
+    tasksCategory = ["a","b","c","d"];
+
   }
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
 
@@ -179,6 +188,33 @@ class _TodoCreateState extends State<TodoCreate>{
               BasicDateTimeField(
                 controller:taskDateTimeController,
               ),
+              DropdownButton(
+                  items: tasksCategory.map((value)=>
+                      DropdownMenuItem(
+                        child: Text(
+                          value,
+                          style: TextStyle(
+                              color: Colors.black
+                          )
+                        ),
+                        value: value,
+                      )
+                  ).toList(),
+                  onChanged: (selectedTasksCategory){
+                    setState(() {
+                      selectedCategory = selectedTasksCategory;
+                    });
+                  },
+                  value: selectedCategory,
+                  isExpanded: true,
+                  dropdownColor: Colors.white,
+                  focusColor: Colors.lightBlue,
+                  hint: Text(
+                    "Select Category"
+                  ),
+
+              ),
+              SizedBox(height: 40.0)
             ]
           )
         )
@@ -198,6 +234,7 @@ class _TodoCreateState extends State<TodoCreate>{
             'name': searchTextField.textField.controller.text,
             'content': taskContentController.text,
             'due_time': taskDateTimeController.text,
+            'category': selectedCategory,
             'year':year,
             'month': month,
             'date': date,

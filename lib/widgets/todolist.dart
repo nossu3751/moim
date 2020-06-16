@@ -55,12 +55,17 @@ class TodoScaffoldState extends State<TodoScaffold>{
                             child: Padding(
                               padding: EdgeInsets.all(0),
                               child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+//                                    color: dDay(document['due_time']) == "overdue" ? Colors.redAccent: Colors.white,
+                                  ),
                                   height: 90,
                                   child: Card(
                                     elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(0)
-                                      ),
+                                      color: Colors.transparent,
+//                                      shape: RoundedRectangleBorder(
+//                                          borderRadius: BorderRadius.circular(0)
+//                                      ),
                                       child: Center(
                                           child: ListTile(
                                               title: Text(document['name']),
@@ -151,22 +156,22 @@ class TodoScaffoldState extends State<TodoScaffold>{
         shape: CircleBorder(),
         children: [
           SpeedDialChild(
-              child: Icon(Icons.note_add),
-              backgroundColor: Colors.white70,
+              child: Icon(Icons.note_add, color: Colors.lightBlueAccent),
+              backgroundColor: Colors.white,
               label: 'Add Item',
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () => Navigator.pushNamed(context, '/create')
           ),
           SpeedDialChild(
-            child: Icon(Icons.library_add),
-            backgroundColor: Colors.white70,
+            child: Icon(Icons.library_add, color: Colors.lightBlueAccent),
+            backgroundColor: Colors.white,
             label: 'Add Category',
             labelStyle: TextStyle(fontSize: 18.0),
-            onTap: () => print('SECOND CHILD'),
+            onTap: () => Navigator.pushNamed(context, '/create_category')
           ),
           SpeedDialChild(
-            child: Icon(Icons.share),
-            backgroundColor: Colors.white70,
+            child: Icon(Icons.share, color: Colors.lightBlueAccent),
+            backgroundColor: Colors.white,
             label: 'Share',
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: () => print('THIRD CHILD'),

@@ -1,4 +1,7 @@
 String dDay (String time){
+  if(time == ""){
+    return "not specified";
+  }
   DateTime dueTime = DateTime.parse(time);
   DateTime rightNow = DateTime.now();
   Duration difference = dueTime.difference(rightNow);

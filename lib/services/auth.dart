@@ -13,7 +13,10 @@ class AuthMethods {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser firebaseUser = result.user;
-      return _userFromFirebaseUser(firebaseUser);
+      return firebaseUser.isEmailVerified
+          ? _userFromFirebaseUser(firebaseUser)
+          : 'email not verified';
+      // return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       print(e.toString());
     }
@@ -24,6 +27,7 @@ class AuthMethods {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser firebaseUser = result.user;
+      await firebaseUser.sendEmailVerification();
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       print(e.toString());

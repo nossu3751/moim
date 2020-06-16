@@ -1,15 +1,17 @@
+//TODO: have to implement
+
 import 'package:flutter/material.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/services/database_methods.dart';
 
-class ConversationScreen extends StatefulWidget {
+class LastMessage extends StatefulWidget {
   final String chatroomId;
-  ConversationScreen(this.chatroomId);
+  LastMessage(this.chatroomId);
   @override
-  _ConversationScreenState createState() => _ConversationScreenState();
+  _LastMessageState createState() => _LastMessageState();
 }
 
-class _ConversationScreenState extends State<ConversationScreen> {
+class _LastMessageState extends State<LastMessage> {
   DatabaseMethods databaseMethods = new DatabaseMethods();
   Stream conversationStream;
   TextEditingController messageTextEditingController =

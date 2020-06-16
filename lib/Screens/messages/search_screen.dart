@@ -29,10 +29,10 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   createChatRoomAndStartConversation(String userName) {
-    if (userName != Constants.myName) {
-      List<String> users = [userName, Constants.myName];
+    if (userName != Constants.myUsername) {
+      List<String> users = [userName, Constants.myUsername];
 
-      String chatRoomId = getChatRoomId(userName, Constants.myName);
+      String chatRoomId = getChatRoomId(userName, Constants.myUsername);
       Map<String, dynamic> chatRoomMap = {
         'users': users,
         'chatroomId': chatRoomId
@@ -53,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return SearchTile(
-                userName: searchSnapshot.documents[index].data['name'],
+                userName: searchSnapshot.documents[index].data['username'],
                 email: searchSnapshot.documents[index].data['email'],
               );
             })

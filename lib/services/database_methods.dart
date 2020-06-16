@@ -6,7 +6,7 @@ class DatabaseMethods {
         .collection(college)
         .document('path')
         .collection('users')
-        .where('name', isEqualTo: name)
+        .where('username', isEqualTo: name)
         .getDocuments();
   }
 
@@ -19,12 +19,27 @@ class DatabaseMethods {
         .getDocuments();
   }
 
-  uploadUserInfo(String college, userMap) {
+  uploadUser(String college, userMap, String email) {
     Firestore.instance
         .collection(college)
         .document('path')
         .collection('users')
-        .add(userMap)
+        .document(email)
+        .setData(userMap)
+        //     .setData(userMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  uploadUserAccountInfo(String college, userMap, String email) {
+    Firestore.instance
+        .collection(college)
+        .document('path')
+        .collection('users')
+        .document(email)
+        .updateData(userMap)
+        //     .setData(userMap)
         .catchError((e) {
       print(e.toString());
     });
@@ -53,6 +68,17 @@ class DatabaseMethods {
         .catchError((e) {
       print(e.toString());
     });
+  }
+
+  getConversationLastMessage(String college, String chatId) async {
+    return await Firestore.instance
+        .collection(college)
+        .document('path')
+        .collection('chatroom')
+        .document(chatId)
+        .collection('chats')
+        .orderBy('time', descending: false)
+        .snapshots();
   }
 
   getConversationMessages(String college, String chatId) async {

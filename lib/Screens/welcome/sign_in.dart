@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/Screens/homepage.dart';
 import 'package:moimapp/Screens/messages/message_home.dart';
-import 'package:moimapp/Screens/welcome/signup.dart';
+
+import 'package:moimapp/Screens/welcome/verify_school.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input.dart';
 import 'package:moimapp/Widgets/round_input_forLogin.dart';
@@ -9,13 +11,13 @@ import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/services/auth.dart';
 import 'package:moimapp/services/database_methods.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class SignIn extends StatefulWidget {
   @override
-  _WelcomeScreenState createState() => _WelcomeScreenState();
+  _SignInState createState() => _SignInState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  String text = " ";
+class _SignInState extends State<SignIn> {
+  String text = '';
   bool isLoading = false;
   QuerySnapshot snapshotUserInfo;
   final formKey = GlobalKey<FormState>();
@@ -43,6 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               'Mount Holyoke College', emailTextEditingContoller.text)
           .then((val) {
         snapshotUserInfo = val;
+        // TODO: add more info that i want to store
         HelperFunctions.saveUserNamePreference(
             snapshotUserInfo.documents[0].data['name']);
         HelperFunctions.saveUserCollegePreference(
@@ -53,17 +56,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           .signInWithEmailAndPassword(
               emailTextEditingContoller.text, passwordTextEditingContoller.text)
           .then((val) {
-        if (val != null) {
+        if (val == null) {
+          setState(() {
+            text = "User doesn't exist";
+          });
+        } else if (val == 'email not verified') {
+          setState(() {
+            text = "Validate your email address";
+          });
+        } else {
           HelperFunctions.saveUserLogInPreference(true);
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => MessageHome()),
+            MaterialPageRoute(builder: (context) => MyHomePage()),
             (Route<dynamic> route) => false,
           );
-        } else {
-          setState(() {
-            text = "    User doesn't exist.";
-          });
         }
       });
     }
@@ -87,11 +94,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  SizedBox(height: size.height * 0.01),
                   Text(
                     text,
                     style: TextStyle(color: Colors.red, fontSize: 13),
                   ),
-                  SizedBox(height: size.height * 0.01),
                   RoundedInputWithController(
                     size: size,
                     textFormField: TextFormField(
@@ -200,7 +207,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
+                      MaterialPageRoute(builder: (context) => VerifySchool()),
                       (Route<dynamic> route) => false,
                     );
                   },

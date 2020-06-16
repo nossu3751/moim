@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moimapp/Screens/messages/message_home.dart';
-import 'package:moimapp/Screens/welcome/signup.dart';
-import 'package:moimapp/Screens/welcome/welcome_screen.dart';
-import 'package:moimapp/Screens/homepage.dart';
+import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
-import 'package:moimapp/widgets/todo.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +22,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  // TODO: work with helperfunctions!!
   getLoggedInState() async {
     await HelperFunctions.getUserLogInPreference().then((val) {
       setState(() {
@@ -42,7 +40,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: userLoggedIn ? MessageHome() : WelcomeScreen(),
+      home: userLoggedIn ? MessageHome() : SignIn(),
     );
   }
 }

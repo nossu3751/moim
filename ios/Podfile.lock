@@ -300,12 +300,12 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.6)
     - PromisesObjC (~> 1.2)
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
   - google_sign_in_web (0.8.1):
-    - Flutter
-  - flutter_local_notifications (0.0.1):
     - Flutter
   - GoogleAppMeasurement (6.5.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
@@ -379,6 +379,8 @@ PODS:
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
   - PromisesObjC (1.2.8)
+  - search_choices (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -396,6 +398,7 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - google_sign_in_web (from `.symlinks/plugins/google_sign_in_web/ios`)
+  - search_choices (from `.symlinks/plugins/search_choices/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
@@ -440,18 +443,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_core_web/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   google_sign_in_web:
     :path: ".symlinks/plugins/google_sign_in_web/ios"
+  search_choices:
+    :path: ".symlinks/plugins/search_choices/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   shared_preferences_macos:
     :path: ".symlinks/plugins/shared_preferences_macos/ios"
   shared_preferences_web:
     :path: ".symlinks/plugins/shared_preferences_web/ios"
-  flutter_local_notifications:
-    :path: ".symlinks/plugins/flutter_local_notifications/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -472,9 +477,9 @@ SPEC CHECKSUMS:
   FirebaseFirestore: deb7242803734c97376278698de097499cf5194f
   FirebaseInstallations: 2119fb3e46b0a88bfdbf12562f855ee3252462fa
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
   google_sign_in_web: 52deb24929ac0992baff65c57956031c44ed44c3
-  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   GoogleAppMeasurement: 137afe68bfa406c3f4221b9395253d9e5d4654cf
   GoogleDataTransport: ad884314b81cdb808fb1d23787b367ff8da4e28a
   GoogleDataTransportCCTSupport: d70a561f7d236af529fee598835caad5e25f6d3d
@@ -487,10 +492,11 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
+  search_choices: b50731e8c425078048f681f39c34375c58d6ce8d
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
 
 PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
 
-COCOAPODS: 1.9.2
+COCOAPODS: 1.9.1

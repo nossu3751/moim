@@ -3,8 +3,8 @@ import 'package:moimapp/Screens/messages/message_home.dart';
 import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/Screens/schedule.dart';
-import 'package:moimapp/Screens/welcome/signup.dart';
-import 'package:moimapp/Screens/welcome/welcome_screen.dart';
+import 'package:moimapp/Screens/welcome/sign_up.dart';
+//import 'package:moimapp/Screens/welcome/welcome_screen.dart';
 import 'package:moimapp/Screens/homepage.dart';
 import 'package:moimapp/widgets/todo.dart';
 
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: userLoggedIn ? MessageHome() : SignIn(),
-      home: SchedulePage(),
+      //home: SchedulePage(),
     );
   }
 }

@@ -4,9 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/icon_button.dart';
 import 'package:moimapp/Widgets/round_button.dart';
+import 'package:moimapp/Screens/schedule.dart';
+
+import 'messages/message_home.dart';
 
 //
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget{
+  @override
+  MyHomePageState createState() => MyHomePageState();
+}
+
+class MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            HighlightText(
+                text: 'HomePage .',
+                fontStyle:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+          ],
+    ),
+    Text("Feed"),
+    SchedulePage(),
+    MessageHome(),
+  ];
+
+  void onTabTapped(int index){
+    setState((){
+      _currentIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,17 +76,20 @@ class MyHomePage extends StatelessWidget {
             // ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            HighlightText(
-                text: 'HomePage .',
-                fontStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-          ],
-        ),
+        body: _children[_currentIndex],
+//        body: Column(
+//          mainAxisAlignment: MainAxisAlignment.center,
+//          crossAxisAlignment: CrossAxisAlignment.center,
+//          children: <Widget>[
+//            HighlightText(
+//                text: 'HomePage .',
+//                fontStyle:
+//                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+//          ],
+//        ),
         bottomNavigationBar: BottomNavigationBar(
+          onTap: onTabTapped,
+          currentIndex:_currentIndex,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -75,10 +108,12 @@ class MyHomePage extends StatelessWidget {
               title: Text(
                 'Schedule',
               ),
+
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.question_answer),
               title: Text('Message'),
+
             ),
           ],
           type: BottomNavigationBarType.fixed,

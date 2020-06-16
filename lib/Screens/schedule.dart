@@ -109,36 +109,37 @@ class SchedulePageState extends State<SchedulePage> {
             }
           },
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text(
-                'Home',
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer),
-              title: Text(
-                'Feed',
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              title: Text(
-                'Schedule',
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
-              title: Text('More'),
-            ),
-          ],
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-        ));
+//        bottomNavigationBar: BottomNavigationBar(
+//          items: [
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.home),
+//              title: Text(
+//                'Home',
+//              ),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.question_answer),
+//              title: Text(
+//                'Feed',
+//              ),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.calendar_today),
+//              title: Text(
+//                'Schedule',
+//              ),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.more_horiz),
+//              title: Text('More'),
+//            ),
+//          ],
+//          type: BottomNavigationBarType.fixed,
+//          selectedItemColor: Colors.black,
+//          unselectedItemColor: Colors.black,
+//          showSelectedLabels: false,
+//          showUnselectedLabels: false,
+//        )
+    );
   }
 }

@@ -48,6 +48,11 @@ class _SignInState extends State<SignIn> {
           });
         } else {
           uploadUserInfo();
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+            (Route<dynamic> route) => false,
+          );
         }
       });
     }

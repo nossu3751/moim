@@ -21,6 +21,16 @@ class MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Container(
+              height: 500,
+              child: Column(
+                children:<Widget>[
+                  GestureDetector(
+                    child: Icon(Icons.calendar_view_day, color: Colors.lightBlue)
+                  )
+                ]
+              )
+            ),
             HighlightText(
                 text: 'HomePage .',
                 fontStyle:
@@ -40,42 +50,42 @@ class MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue[50],
-          actions: <Widget>[
-            // action button
-            IconButton(
-              icon: Icon(
-                Icons.person_outline,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                {}
-                ;
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                {}
-                ;
-              },
-            ),
-            // IconButton(
-            //   icon: Icon(
-            //     Icons.notifications,
-            //     color: Colors.black,
-            //   ),
-            //   onPressed: () {
-            //     {}
-            //     ;
-            //   },
-            // ),
-          ],
-        ),
+//        appBar: AppBar(
+//          backgroundColor: Colors.blue[50],
+//          actions: <Widget>[
+//            // action button
+//            IconButton(
+//              icon: Icon(
+//                Icons.person_outline,
+//                color: Colors.black,
+//              ),
+//              onPressed: () {
+//                {}
+//                ;
+//              },
+//            ),
+//            IconButton(
+//              icon: Icon(
+//                Icons.search,
+//                color: Colors.black,
+//              ),
+//              onPressed: () {
+//                {}
+//                ;
+//              },
+//            ),
+//            // IconButton(
+//            //   icon: Icon(
+//            //     Icons.notifications,
+//            //     color: Colors.black,
+//            //   ),
+//            //   onPressed: () {
+//            //     {}
+//            //     ;
+//            //   },
+//            // ),
+//          ],
+//        ),
         body: _children[_currentIndex],
 //        body: Column(
 //          mainAxisAlignment: MainAxisAlignment.center,

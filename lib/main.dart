@@ -24,10 +24,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    getLoggedInState();
     super.initState();
   }
 
-  // TODO: work with helperfunctions!!
   getLoggedInState() async {
     await HelperFunctions.getUserLogInPreference().then((val) {
       setState(() {
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: userLoggedIn ? MessageHome() : SignIn(),
+      home: userLoggedIn ? MyHomePage() : SignIn(),
       //home: SchedulePage(),
     );
   }

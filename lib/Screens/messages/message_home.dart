@@ -72,6 +72,7 @@ class _MessageHomeState extends State<MessageHome> {
           GestureDetector(
             onTap: () {
               authMethods.signOut();
+              HelperFunctions.saveUserLogInPreference(false);
               Navigator.pushReplacement(
                   context, MaterialPageRoute(builder: (context) => SignIn()));
             },
@@ -85,6 +86,7 @@ class _MessageHomeState extends State<MessageHome> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.search),
           onPressed: () {
+            print(Constants.myUsername);
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return SearchScreen();
             }));

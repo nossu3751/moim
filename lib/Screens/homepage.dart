@@ -1,42 +1,54 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:moimapp/Widgets/highlight_text.dart';
-import 'package:moimapp/Widgets/icon_button.dart';
-import 'package:moimapp/Widgets/round_button.dart';
+import 'package:moimapp/Screens/home.dart';
 import 'package:moimapp/Screens/schedule.dart';
+import 'package:moimapp/helper/constants.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 
 import 'messages/message_home.dart';
 
 //
-class MyHomePage extends StatefulWidget{
+class MyHomePage extends StatefulWidget {
   @override
   MyHomePageState createState() => MyHomePageState();
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  bool isLoading = false;
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            HighlightText(
-                text: 'HomePage .',
-                fontStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-          ],
-    ),
+
+  List<Widget> _children = [
+    Home(),
     Text("Feed"),
     SchedulePage(),
     MessageHome(),
   ];
 
-  void onTabTapped(int index){
-    setState((){
+  void onTabTapped(int index) {
+    setState(() {
       _currentIndex = index;
     });
   }
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    setState(() {
+      isLoading = true; //Data is loading
+    });
+    Constants.myUsername = await HelperFunctions.getUserNamePreference();
+    Constants.myCollege = await HelperFunctions.getUserCollegePreference();
+    Constants.myEmail = await HelperFunctions.getUserEmailPreference();
+    Constants.myFirstname = await HelperFunctions.getUserFirstNamePreference();
+    setState(() {
+      //Data has loaded
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +63,6 @@ class MyHomePageState extends State<MyHomePage> {
               ),
               onPressed: () {
                 {}
-                ;
               },
             ),
             IconButton(
@@ -60,8 +71,9 @@ class MyHomePageState extends State<MyHomePage> {
                 color: Colors.black,
               ),
               onPressed: () {
-                {}
-                ;
+                {
+                  print(Constants.myUsername);
+                }
               },
             ),
             // IconButton(
@@ -76,20 +88,12 @@ class MyHomePageState extends State<MyHomePage> {
             // ),
           ],
         ),
-        body: _children[_currentIndex],
-//        body: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            HighlightText(
-//                text: 'HomePage .',
-//                fontStyle:
-//                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-//          ],
-//        ),
+        body: isLoading
+            ? Center(child: Container(child: CircularProgressIndicator()))
+            : _children[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped,
-          currentIndex:_currentIndex,
+          currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -108,12 +112,10 @@ class MyHomePageState extends State<MyHomePage> {
               title: Text(
                 'Schedule',
               ),
-
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.question_answer),
               title: Text('Message'),
-
             ),
           ],
           type: BottomNavigationBarType.fixed,

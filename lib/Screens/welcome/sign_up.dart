@@ -54,14 +54,15 @@ class _SignUpState extends State<SignUp> {
         'school_year': widget.schoolYear,
       };
 
-      // HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
-      // HelperFunctions.saveUserCollegePreference(widget.college);
+      HelperFunctions.saveUserFirstNamePreference(
+          firstNameTextEditingContoller.text);
       HelperFunctions.saveUserNamePreference(usernameTextEditingContoller.text);
+      HelperFunctions.saveUserLogInPreference(true);
 
-      Constants.myFirstname = firstNameTextEditingContoller.text;
-      Constants.myLastname = lastNameTextEditingContoller.text;
-      Constants.myUsername = usernameTextEditingContoller.text;
-      Constants.mySchoolYear = widget.schoolYear;
+      // Constants.myFirstname = firstNameTextEditingContoller.text;
+      // Constants.myLastname = lastNameTextEditingContoller.text;
+      // Constants.myUsername = usernameTextEditingContoller.text;
+      // Constants.mySchoolYear = widget.schoolYear;
 
       databaseMethods.uploadUserAccountInfo(
           Constants.myCollege, userInfoMap, Constants.myEmail);
@@ -116,7 +117,7 @@ class _SignUpState extends State<SignUp> {
                               fontSize: 20, fontWeight: FontWeight.bold)),
                       HighlightText(
                           text:
-                              '${Constants.myCollege.replaceAll('College', '')}Moim Account .',
+                              '${Constants.myCollege.replaceAll('College', '').replaceAll('University', '')}Moim Account .',
                           fontStyle: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                       SizedBox(height: size.height * 0.03),

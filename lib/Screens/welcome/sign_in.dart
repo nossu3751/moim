@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:moimapp/Screens/homepage.dart';
-import 'package:moimapp/Screens/messages/message_home.dart';
-
 import 'package:moimapp/Screens/welcome/verify_school.dart';
 import 'package:moimapp/Widgets/round_button.dart';
-import 'package:moimapp/Widgets/round_input.dart';
 import 'package:moimapp/Widgets/round_input_forLogin.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/services/auth.dart';
@@ -29,11 +26,8 @@ class _SignInState extends State<SignIn> {
       new TextEditingController();
 
   signIn() {
-    //TODO : implement SignIn()
-    //TODO : how to implement validate ...
-    // Right now always return true so always sign in ()
-    //TODO haven't check if the password match the useremail!!!
-    // if @mtholyoke -> then mount holyoke...
+    //TODO : implement SignIn() - check if password is correct
+    //TODO : condition for each colleges - if @mtholyoke -> then mount holyoke...
     if (formKey.currentState.validate()) {
       HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
       setState(() {
@@ -54,12 +48,6 @@ class _SignInState extends State<SignIn> {
           });
         } else {
           uploadUserInfo();
-
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage()),
-            (Route<dynamic> route) => false,
-          );
         }
       });
     }
@@ -198,7 +186,6 @@ class _SignInState extends State<SignIn> {
               width: size.width * 0.8,
               child: RoundedButton(
                 press: () => signIn(),
-                // press: () {},
                 text: 'Sign In',
                 fillColor: Colors.grey[350],
               ),
@@ -229,12 +216,6 @@ class _SignInState extends State<SignIn> {
           ],
         ),
       ),
-    );
-  }
-
-  Expanded BuildDivider() {
-    return Expanded(
-      child: Divider(color: Colors.black, height: 1.5),
     );
   }
 }

@@ -50,12 +50,8 @@ class _VerifySchoolState extends State<VerifySchool> {
           'college': widget.college
         };
 
-        // not sure where we are using these
         HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
         HelperFunctions.saveUserCollegePreference(widget.college);
-
-        // Constants.myUsername = await HelperFunctions.getUserNamePreference();
-        // Constants.myCollege = await HelperFunctions.getUserCollegePreference();
 
         Constants.myEmail = emailTextEditingContoller.text;
         Constants.myCollege = widget.college;
@@ -66,11 +62,6 @@ class _VerifySchoolState extends State<VerifySchool> {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return SignUp();
         }));
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => WelcomeScreen()),
-        //   (Route<dynamic> route) => false,
-        // );
       });
     }
   }
@@ -141,24 +132,6 @@ class _VerifySchoolState extends State<VerifySchool> {
                         key: formKey,
                         child: Column(
                           children: <Widget>[
-                            // RoundedInputWithController(
-                            //   size: size,
-                            //   textFormField: TextFormField(
-                            //     controller: usernameTextEditingContoller,
-                            //     validator: (val) {
-                            //       return val.isEmpty || val.length < 3
-                            //           ? "Enter Username longer than three characters"
-                            //           : null;
-                            //     },
-                            //     decoration: InputDecoration(
-                            //         hintText: "Username",
-                            //         icon: Icon(
-                            //           Icons.person,
-                            //           color: Colors.grey[900],
-                            //         ),
-                            //         border: InputBorder.none),
-                            //   ),
-                            // ),
                             SizedBox(height: 10),
                             RoundedInputWithController(
                               size: size,

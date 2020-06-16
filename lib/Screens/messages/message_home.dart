@@ -47,8 +47,6 @@ class _MessageHomeState extends State<MessageHome> {
   }
 
   getUserInfo() async {
-    // Constants.myName = await HelperFunctions.getUserNamePreference();
-    // Constants.myCollege = await HelperFunctions.getUserCollegePreference();
     databaseMethods
         .getAllChatRooms(Constants.myCollege, Constants.myUsername)
         .then((value) {
@@ -62,10 +60,6 @@ class _MessageHomeState extends State<MessageHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.chevron_left),
-        //   onPressed: () => Navigator.pop(context, false),
-        // ),
         backgroundColor: Colors.white,
         title: Text('Messages'),
         actions: <Widget>[

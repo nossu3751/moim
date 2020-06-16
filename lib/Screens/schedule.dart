@@ -14,101 +14,100 @@ class SchedulePage extends StatefulWidget {
 class SchedulePageState extends State<SchedulePage> {
   final Duration duration = const Duration(milliseconds: 300);
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          leading: IconButton(
+      appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            {}
+          },
+        ),
+        title: HighlightText(
+            text: '2020 Fall',
+            fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+        actions: <Widget>[
+          // action button
+          IconButton(
             icon: Icon(
-              Icons.menu,
+              Icons.add,
               color: Colors.black,
             ),
             onPressed: () {
-              {}
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddCourse()),
+              );
             },
           ),
-          title: HighlightText(
-              text: '2020 Fall',
-              fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-          actions: <Widget>[
-            // action button
-            IconButton(
-              icon: Icon(
-                Icons.add,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddCourse()),
-                );
-              },
-            ),
-          ],
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: widget.collection.snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Text('Loading...!!!!!!!!!!!!!!!!!!');
-              default:
-                return Material(
-                  animationDuration: duration,
-                  elevation: 8,
-                  color: Colors.white,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    physics: ClampingScrollPhysics(),
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            mainAxisSize: MainAxisSize.max,
-                          ),
-                          Container(
+        ],
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: widget.collection.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                  child: Container(child: CircularProgressIndicator()));
+            default:
+              return Material(
+                animationDuration: duration,
+                elevation: 8,
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: ClampingScrollPhysics(),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                        ),
+                        Container(
 //                      margin: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
+                            decoration: BoxDecoration(
 //                          borderRadius: BorderRadius.circular(20),
-                                  border: Border.symmetric(
-                                      vertical: BorderSide(width: 0.5))),
-                              alignment: Alignment.center,
-                              child: WeeklyTimeTable(
-                                onValueChanged: (Map<int, List<int>> selected) {
-                                  print(selected);
-                                },
-                              )),
-                          ListView(
-                            shrinkWrap: true,
-                            children: snapshot.data.documents
-                                .map((DocumentSnapshot document) {
-                              if (snapshot.data == null) {
-                                return Text('No data to show');
-                              } else {
-                                return Card(
-                                    child: ListTile(
-                                  title: Text(document['cname']),
-                                  trailing: Text(document['days'].toString()),
-                                ));
-                              }
-                            }).toList(),
-                          ),
-                        ],
-                      ),
+                                border: Border.symmetric(
+                                    vertical: BorderSide(width: 0.5))),
+                            alignment: Alignment.center,
+                            child: WeeklyTimeTable(
+                              onValueChanged: (Map<int, List<int>> selected) {
+                                print(selected);
+                              },
+                            )),
+                        ListView(
+                          shrinkWrap: true,
+                          children: snapshot.data.documents
+                              .map((DocumentSnapshot document) {
+                            if (snapshot.data == null) {
+                              return Text('No data to show');
+                            } else {
+                              return Card(
+                                  child: ListTile(
+                                title: Text(document['cname']),
+                                trailing: Text(document['days'].toString()),
+                              ));
+                            }
+                          }).toList(),
+                        ),
+                      ],
                     ),
                   ),
-                );
-            }
-          },
-        ),
+                ),
+              );
+          }
+        },
+      ),
 //        bottomNavigationBar: BottomNavigationBar(
 //          items: [
 //            BottomNavigationBarItem(

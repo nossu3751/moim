@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:moimapp/Screens/home.dart';
 import 'package:moimapp/Screens/schedule.dart';
+import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
+import 'package:moimapp/services/auth.dart';
 
 import 'messages/message_home.dart';
 
-//
 class MyHomePage extends StatefulWidget {
   @override
   MyHomePageState createState() => MyHomePageState();
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  AuthMethods authMethods = new AuthMethods();
   bool isLoading = false;
   int _currentIndex = 0;
 
@@ -54,6 +56,18 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue[50],
+          leading: IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              authMethods.signOut();
+              HelperFunctions.saveUserLogInPreference(false);
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => SignIn()));
+            },
+          ),
           actions: <Widget>[
             // action button
             IconButton(

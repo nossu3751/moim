@@ -4,6 +4,7 @@ class RoundedButton extends StatelessWidget {
   final String text;
   final double fontSize;
   final Function press;
+  final Color fillColor;
   final Color fontColor;
 
   // by Default, font size is 14 but can be adjusted
@@ -13,6 +14,7 @@ class RoundedButton extends StatelessWidget {
     this.press,
     this.fontColor,
     this.fontSize = 14,
+    this.fillColor,
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class RoundedButton extends StatelessWidget {
       onTap: press,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.lightBlue[100],
+          color: fillColor,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(

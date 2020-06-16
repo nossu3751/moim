@@ -16,7 +16,7 @@ class RoundIconButton extends StatelessWidget {
       onTap: press,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.lightBlue[100],
+          color: Colors.blue[100],
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(

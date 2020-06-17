@@ -2,29 +2,66 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/widgets/d_date_calculator.dart';
 import 'package:moimapp/widgets/highlight_text.dart';
 import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/custom_expansion_tile.dart';
+import 'dart:developer' as developer;
 
 class TodoScaffold extends StatefulWidget{
 //  final List<Task> tasks;
 //  final onToggle;
-  final collection = Firestore.instance.collection('rhosung_tasks');
-  final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
+//  final collection = Firestore.instance.collection('rhosung_tasks');
+//  final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
 
 //  TodoScaffold({@required this.tasks, @required this.onToggle});
 
   @override
   TodoScaffoldState createState() => TodoScaffoldState();
 }
+
 class TodoScaffoldState extends State<TodoScaffold>{
+  CollectionReference completeTodo;
+  CollectionReference incompleteTodo;
+  Stream<QuerySnapshot> todoBuilder;
+
+  @override
+  void initState(){
+    _todoUserSetting();
+    super.initState();
+  }
+
+  void _todoUserSetting() async {
+    String collegeName = await HelperFunctions.getUserCollegePreference();
+    String userEmail = await HelperFunctions.getUserEmailPreference();
+
+    developer.log(collegeName);
+    developer.log(userEmail);
+
+    completeTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('completeTasks');
+    incompleteTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('incompleteTasks');
+
+    String isNull = incompleteTodo == null ? "this is null":"this has data";
+    developer.log(isNull);
+    todoBuilder = incompleteTodo.orderBy('due_time').snapshots();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
+      body: incompleteTodo != null? StreamBuilder<QuerySnapshot>(
         // list is ordered by due time
-        stream: widget.collection.orderBy('due_time').snapshots(),
+        stream: todoBuilder,
+//        stream: incompleteTodo != null? incompleteTodo.orderBy('due_time').snapshots():widget.collection.orderBy('due_time').snapshots(),
+//        stream: widget.collection.orderBy('due_time').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if(snapshot.hasError)
             return Text('Error: ${snapshot.error}');
@@ -88,7 +125,7 @@ class TodoScaffoldState extends State<TodoScaffold>{
                             onDismissed: (direction) async {
 
                               if(direction == DismissDirection.startToEnd){
-                                await widget.completedCollection.add({
+                                await completeTodo.add({
                                   'name': document['name'],
                                   'content': document['content'],
                                   'due_time': "",
@@ -100,9 +137,9 @@ class TodoScaffoldState extends State<TodoScaffold>{
                                   'completed_on': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()).toString(),
                                   'completed_weekday': DateFormat("EEEE").format(DateTime.now()).toString()
                                 });
-                                await widget.collection.document(document.documentID).delete();
+                                await incompleteTodo.document(document.documentID).delete();
                               }else if(direction == DismissDirection.endToStart){
-                                await widget.collection.document(document.documentID).delete();
+                                await incompleteTodo.document(document.documentID).delete();
                               }
                             },
                             background: Padding(
@@ -138,7 +175,8 @@ class TodoScaffoldState extends State<TodoScaffold>{
               );
           }
         }
-      ),
+      ): Center(child: CircularProgressIndicator(),),
+
       floatingActionButton: SpeedDial(
         marginRight: 18,
         marginBottom: 20,

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/widgets/calender_height_calculator.dart';
 import 'package:moimapp/widgets/completedTaskList.dart';
 import 'package:moimapp/widgets/task.dart';
@@ -152,16 +153,6 @@ class _TodoCreateState extends State<TodoCreate>{
   }
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
 
-//  @override
-//  void initState(){
-//    super.initState();
-//    completedCollection.getDocuments().then((snapshot) async {
-//      for(DocumentSnapshot doc in snapshot.documents){
-//        await completedTaskTitle.add(doc['name']);
-//      }
-//    });
-//  }
-//
   Widget row(String str){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,13 +201,7 @@ class _TodoCreateState extends State<TodoCreate>{
                   labelText: 'Enter your task item name.'
                 ),
               ),
-//              TextField(
-//                  autofocus: true,
-//                  controller: taskTitleController,
-//                  decoration: InputDecoration(
-//                      labelText: 'Enter your task item name.'
-//                  )
-//              ),
+//
               TextField(
                 autofocus: false,
                 controller: taskContentController,
@@ -286,94 +271,3 @@ class _TodoCreateState extends State<TodoCreate>{
     );
   }
 }
-//class TodoList extends StatefulWidget{
-//  @override
-//  _TodoListState createState() => _TodoListState();
-//}
-//
-//class _TodoListState extends State<TodoList> {
-//
-//  void onTaskCreated(String name){
-//    setState(() {
-//      tasks.add(Task(name));
-//    });
-//  }
-//
-//  String input = "";
-//  @override
-//  void initState() {
-//    super.initState();
-//  }
-//
-//  @override
-//  Widget build(BuildContext context){
-//    return Scaffold(
-//      appBar: AppBar(
-//        elevation: 0,
-//        title: Text("Todo List"),
-//      ),
-//      floatingActionButton: _fabButton,
-//      body: ListView.builder(
-//
-//          itemCount: tasks.length,
-//          itemBuilder: (context,index) {
-//            return ListTile(
-//              title: Text(tasks[index].getName())
-//            );
-//          },
-////        itemBuilder: (context, index) => Dismissible(
-////          direction: DismissDirection.startToEnd,
-////          onDismissed: (direction){
-////            setState(() {
-////              todos.removeAt(index);
-////            });
-////          },
-////          key: Key(todos[index].getName()),
-////          child: CustomCard(
-////            title: todos[index].getName(),
-////          ),
-//
-//        )
-//      );
-//
-//  }
-//
-//  Widget get _fabButton => FloatingActionButton(
-//    elevation: 0,
-//    onPressed: () => Navigator.pushNamed(
-//      context,
-//      '/create'
-//    ),
-////      onPressed: () {
-////        showDialog(
-////          context: context,
-////          builder: (BuildContext context){
-////            return AlertDialog(
-////              shape: RoundedRectangleBorder(
-////                borderRadius:BorderRadius.all(Radius.circular(20))
-////              ),
-////              title: Text("Add Todo-item"),
-////              content: TextField(
-////                onChanged: (String value) {
-////                  input = value;
-////                }
-////              ),
-////              actions: <Widget>[
-////                FlatButton(
-////                  child: Text("Add"),
-////                  onPressed: (){
-////                    setState((){
-////                      todos.add(input);
-////                    });
-////                    Navigator.of(context).pop();
-////                  },
-////                )
-////              ]
-////            );
-////
-////          }
-////        );
-////      },
-//      child: Icon(Icons.add)
-//  );
-//}

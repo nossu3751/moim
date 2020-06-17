@@ -9,6 +9,8 @@ import 'package:moimapp/widgets/task.dart';
 import 'package:moimapp/widgets/custom_expansion_tile.dart';
 import 'dart:developer' as developer;
 
+import 'package:moimapp/widgets/todo.dart';
+
 class TodoScaffold extends StatefulWidget{
 //  final List<Task> tasks;
 //  final onToggle;
@@ -28,11 +30,11 @@ class TodoScaffoldState extends State<TodoScaffold>{
 
   @override
   void initState(){
-    _todoUserSetting();
+//    _todoUserSetting();
     super.initState();
   }
 
-  void _todoUserSetting() async {
+  Future _todoUserSetting() async {
     String collegeName = await HelperFunctions.getUserCollegePreference();
     String userEmail = await HelperFunctions.getUserEmailPreference();
 
@@ -57,58 +59,62 @@ class TodoScaffoldState extends State<TodoScaffold>{
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: incompleteTodo != null? StreamBuilder<QuerySnapshot>(
-        // list is ordered by due time
-        stream: todoBuilder,
+//      body: incompleteTodo != null?
+      body: FutureBuilder(
+        future:_todoUserSetting(),
+        builder: (context, snapshot){
+          return StreamBuilder<QuerySnapshot>(
+            // list is ordered by due time
+              stream: todoBuilder,
 //        stream: incompleteTodo != null? incompleteTodo.orderBy('due_time').snapshots():widget.collection.orderBy('due_time').snapshots(),
 //        stream: widget.collection.orderBy('due_time').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-          if(snapshot.hasError)
-            return Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState){
-            case ConnectionState.waiting:
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator()
-                )
-              );
-            default:
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white
-                ),
-                constraints: BoxConstraints.expand(),
-                child: RefreshIndicator(
-                  onRefresh: () async{
-                    await Future.delayed(Duration(milliseconds: 1500));
-                    return null;
-                  },
-                  child: ListView(
-                    children: snapshot.data.documents.map((DocumentSnapshot document){
-                      if(snapshot.data == null) {
-                        return Text('No data to show');
-                      }else{
-                        return Dismissible(
-                            child: Padding(
-                              padding: EdgeInsets.all(0),
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                if(snapshot.hasError)
+                  return Text('Error: ${snapshot.error}');
+                switch (snapshot.connectionState){
+                  case ConnectionState.waiting:
+                    return Container(
+                        child: Center(
+                            child: CircularProgressIndicator()
+                        )
+                    );
+                  default:
+                    return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white
+                        ),
+                        constraints: BoxConstraints.expand(),
+                        child: RefreshIndicator(
+                            onRefresh: () async{
+                              await Future.delayed(Duration(milliseconds: 1500));
+                              return null;
+                            },
+                            child: ListView(
+                              children: snapshot.data.documents.map((DocumentSnapshot document){
+                                if(snapshot.data == null) {
+                                  return Text('No data to show');
+                                }else{
+                                  return Dismissible(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(0),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
 //                                    color: dDay(document['due_time']) == "overdue" ? Colors.redAccent: Colors.white,
-                                  ),
-                                  height: 90,
-                                  child: Card(
-                                    elevation: 0,
-                                      color: Colors.transparent,
+                                            ),
+                                            height: 90,
+                                            child: Card(
+                                                elevation: 0,
+                                                color: Colors.transparent,
 //                                      shape: RoundedRectangleBorder(
 //                                          borderRadius: BorderRadius.circular(0)
 //                                      ),
-                                      child: Center(
-                                          child: ListTile(
-                                              title: Text(document['name']),
-                                              trailing: document['due_time'] == null || document['due_time'] == ""?
-                                                  Text("not specified", style:TextStyle(color: Colors.grey, fontSize: 10)):
-                                                  HighlightText(text:dDay(document['due_time']), fontStyle:TextStyle(color: Colors.grey, fontSize: 10))
+                                                child: Center(
+                                                    child: ListTile(
+                                                        title: Text(document['name']),
+                                                        trailing: document['due_time'] == null || document['due_time'] == ""?
+                                                        Text("not specified", style:TextStyle(color: Colors.grey, fontSize: 10)):
+                                                        HighlightText(text:dDay(document['due_time']), fontStyle:TextStyle(color: Colors.grey, fontSize: 10))
 //                                              trailing: Text(
 ////                                              document['due_time'] != null && document['due_time'] != ""?
 ////                                              document['due_time']:"not specified",
@@ -116,67 +122,68 @@ class TodoScaffoldState extends State<TodoScaffold>{
 //                                                (dDay(document['due_time'])):"not specified",
 //                                                style: TextStyle(color: Colors.grey, fontSize: 10),
 //                                              )
+                                                    )
+                                                )
+                                            )
+                                        ),
+                                      ),
+                                      key: Key(document.documentID.toString()),
+                                      onDismissed: (direction) async {
+
+                                        if(direction == DismissDirection.startToEnd){
+                                          await completeTodo.add({
+                                            'name': document['name'],
+                                            'content': document['content'],
+                                            'due_time': "",
+                                            'year': "",
+                                            'month': "",
+                                            'date': "",
+                                            'hour': "",
+                                            'minute': "",
+                                            'completed_on': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()).toString(),
+                                            'completed_weekday': DateFormat("EEEE").format(DateTime.now()).toString()
+                                          });
+                                          await incompleteTodo.document(document.documentID).delete();
+                                        }else if(direction == DismissDirection.endToStart){
+                                          await incompleteTodo.document(document.documentID).delete();
+                                        }
+                                      },
+                                      background: Padding(
+                                        padding: EdgeInsets.all(0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: new BorderRadius.all(Radius.circular(0)),
+                                            color: Colors.green,
+                                          ),
+                                          child: Icon(Icons.check, color: Colors.white),
+                                        ),
+                                      ),
+                                      secondaryBackground: Padding(
+                                          padding: EdgeInsets.all(0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.all(Radius.circular(0)),
+                                              color: Colors.red,
+                                            ),
+                                            child: Icon(Icons.cancel, color: Colors.white),
                                           )
                                       )
-                                  )
-                              ),
-                            ),
-                            key: Key(document.documentID.toString()),
-                            onDismissed: (direction) async {
-
-                              if(direction == DismissDirection.startToEnd){
-                                await completeTodo.add({
-                                  'name': document['name'],
-                                  'content': document['content'],
-                                  'due_time': "",
-                                  'year': "",
-                                  'month': "",
-                                  'date': "",
-                                  'hour': "",
-                                  'minute': "",
-                                  'completed_on': DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()).toString(),
-                                  'completed_weekday': DateFormat("EEEE").format(DateTime.now()).toString()
-                                });
-                                await incompleteTodo.document(document.documentID).delete();
-                              }else if(direction == DismissDirection.endToStart){
-                                await incompleteTodo.document(document.documentID).delete();
-                              }
-                            },
-                            background: Padding(
-                              padding: EdgeInsets.all(0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: new BorderRadius.all(Radius.circular(0)),
-                                  color: Colors.green,
-                                ),
-                                child: Icon(Icons.check, color: Colors.white),
-                              ),
-                            ),
-                            secondaryBackground: Padding(
-                                padding: EdgeInsets.all(0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.all(Radius.circular(0)),
-                                    color: Colors.red,
-                                  ),
-                                  child: Icon(Icons.cancel, color: Colors.white),
-                                )
-                            )
 //                        onDismissed:(direction){
 //                          setState(() async{
 //                            await widget.collection.document(document.documentID).delete();
 //                          });
 //                        }
-                        );
-                      }
-                    }).toList(),
-                  )
-                )
-              );
-          }
-        }
-      ): Center(child: CircularProgressIndicator(),),
-
+                                  );
+                                }
+                              }).toList(),
+                            )
+                        )
+                    );
+                }
+              }
+          );
+        },
+      ),
       floatingActionButton: SpeedDial(
         marginRight: 18,
         marginBottom: 20,
@@ -198,7 +205,11 @@ class TodoScaffoldState extends State<TodoScaffold>{
               backgroundColor: Colors.white,
               label: 'Add Item',
               labelStyle: TextStyle(fontSize: 18.0),
-              onTap: () => Navigator.pushNamed(context, '/create')
+//              onTap: () => Navigator.pushNamed(context, '/create')
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TodoCreate()),
+              )
           ),
           SpeedDialChild(
             child: Icon(Icons.library_add, color: Colors.lightBlueAccent),

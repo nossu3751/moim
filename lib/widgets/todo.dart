@@ -8,6 +8,7 @@ import 'package:moimapp/widgets/timepicker.dart';
 import 'package:moimapp/widgets/todo_create_category.dart';
 import 'package:moimapp/widgets/todolist.dart';
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'dart:developer' as developer;
 
 
 import 'package:moimapp/widgets/d_date_calculator.dart';
@@ -130,6 +131,8 @@ class TodoCreate extends StatefulWidget{
 }
 
 class _TodoCreateState extends State<TodoCreate>{
+  CollectionReference completeTodo;
+  CollectionReference incompleteTodo;
   final collection = Firestore.instance.collection('rhosung_tasks');
   final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
   final taskCategory = Firestore.instance.collection('rhosungTasksCategories');
@@ -146,11 +149,35 @@ class _TodoCreateState extends State<TodoCreate>{
   void initState() {
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
     super.initState();
+    _todoUserSetting();
     completedTaskTitle = [];
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
     tasksCategory = ["a","b","c","d"];
 
   }
+
+  void _todoUserSetting() async {
+    String collegeName = await HelperFunctions.getUserCollegePreference();
+    String userEmail = await HelperFunctions.getUserEmailPreference();
+
+    developer.log(collegeName);
+    developer.log(userEmail);
+
+    completeTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('completeTasks');
+    incompleteTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('incompleteTasks');
+
+    String isNull = incompleteTodo == null ? "this is null":"this has data";
+    developer.log(isNull);
+  }
+
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
 
   Widget row(String str){
@@ -171,103 +198,103 @@ class _TodoCreateState extends State<TodoCreate>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create a task')),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget> [
-              searchTextField = AutoCompleteTextField<String>(
-                clearOnSubmit: false,
-                itemSubmitted: (item){
-                  setState((){
-                    searchTextField.textField.controller.text = item;
-                  });
-                },
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-                key: taskkey,
-                suggestions: completedTaskListBuilder(completedCollection, completedTaskTitle),
-                itemBuilder: (context, item){
-                  return row(item);
-                },
-                itemSorter: (a,b){
-                  return a.compareTo(b);
-                },
-                itemFilter: (item, query){
-                  return item.toLowerCase().startsWith(query.toLowerCase());
-                },
-                decoration: InputDecoration(
-                  labelText: 'Enter your task item name.'
-                ),
-              ),
-//
-              TextField(
-                autofocus: false,
-                controller: taskContentController,
-                decoration: InputDecoration(
-                  labelText: 'Describe your task item.'
-                )
-              ),
-              BasicDateTimeField(
-                controller:taskDateTimeController,
-              ),
-              DropdownButton(
-                  items: tasksCategory.map((value)=>
-                      DropdownMenuItem(
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              color: Colors.black
-                          )
+        appBar: AppBar(title: Text('Create a task')),
+        body: Center(
+            child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget> [
+                      searchTextField = AutoCompleteTextField<String>(
+                        clearOnSubmit: false,
+                        itemSubmitted: (item){
+                          setState((){
+                            searchTextField.textField.controller.text = item;
+                          });
+                        },
+                        style: TextStyle(color: Colors.black, fontSize: 16.0),
+                        key: taskkey,
+                        suggestions: completedTaskListBuilder(completedCollection, completedTaskTitle),
+                        itemBuilder: (context, item){
+                          return row(item);
+                        },
+                        itemSorter: (a,b){
+                          return a.compareTo(b);
+                        },
+                        itemFilter: (item, query){
+                          return item.toLowerCase().startsWith(query.toLowerCase());
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Enter your task item name.'
                         ),
-                        value: value,
-                      )
-                  ).toList(),
-                  onChanged: (selectedTasksCategory){
-                    setState(() {
-                      selectedCategory = selectedTasksCategory;
-                    });
-                  },
-                  value: selectedCategory,
-                  isExpanded: true,
-                  dropdownColor: Colors.white,
-                  focusColor: Colors.lightBlue,
-                  hint: Text(
-                    "Select Category"
-                  ),
+                      ),
+//
+                      TextField(
+                          autofocus: false,
+                          controller: taskContentController,
+                          decoration: InputDecoration(
+                              labelText: 'Describe your task item.'
+                          )
+                      ),
+                      BasicDateTimeField(
+                        controller:taskDateTimeController,
+                      ),
+                      DropdownButton(
+                        items: tasksCategory.map((value)=>
+                            DropdownMenuItem(
+                              child: Text(
+                                  value,
+                                  style: TextStyle(
+                                      color: Colors.black
+                                  )
+                              ),
+                              value: value,
+                            )
+                        ).toList(),
+                        onChanged: (selectedTasksCategory){
+                          setState(() {
+                            selectedCategory = selectedTasksCategory;
+                          });
+                        },
+                        value: selectedCategory,
+                        isExpanded: true,
+                        dropdownColor: Colors.white,
+                        focusColor: Colors.lightBlue,
+                        hint: Text(
+                            "Select Category"
+                        ),
 
-              ),
-              SizedBox(height: 40.0)
-            ]
-          )
-        )
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.done),
-        onPressed: () async{
-          DateTime dueTime = taskDateTimeController.text == ""?null:DateTime.parse(taskDateTimeController.text);
+                      ),
+                      SizedBox(height: 40.0)
+                    ]
+                )
+            )
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.done),
+            onPressed: () async{
+              DateTime dueTime = taskDateTimeController.text == ""?null:DateTime.parse(taskDateTimeController.text);
 //          DateTime rightNow = DateTime.now();
 //          String difference = dueTime.difference(rightNow).inDays.toString();
-          String year = dueTime == null?"":dueTime.year.toString();
-          String month = dueTime == null?"":dueTime.month.toString();
-          String date = dueTime == null?"":dueTime.day.toString();
-          String hour = dueTime == null?"":dueTime.hour.toString();
-          String minute = dueTime == null?"":dueTime.minute.toString();
-          await collection.add({
-            'name': searchTextField.textField.controller.text,
-            'content': taskContentController.text,
-            'due_time': taskDateTimeController.text,
-            'category': selectedCategory,
-            'year':year,
-            'month': month,
-            'date': date,
-            'hour': hour,
-            'minute': minute,
-          });
-          Navigator.pop(context);
-        }
-      )
+              String year = dueTime == null?"":dueTime.year.toString();
+              String month = dueTime == null?"":dueTime.month.toString();
+              String date = dueTime == null?"":dueTime.day.toString();
+              String hour = dueTime == null?"":dueTime.hour.toString();
+              String minute = dueTime == null?"":dueTime.minute.toString();
+              await incompleteTodo.add({
+                'name': searchTextField.textField.controller.text,
+                'content': taskContentController.text,
+                'due_time': taskDateTimeController.text,
+                'category': selectedCategory,
+                'year':year,
+                'month': month,
+                'date': date,
+                'hour': hour,
+                'minute': minute,
+              });
+              Navigator.pop(context);
+            }
+        )
     );
   }
 }

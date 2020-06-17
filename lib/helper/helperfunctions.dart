@@ -37,8 +37,6 @@ class HelperFunctions {
     return await prefs.setString(sharedPreferenceUserFirstNameKey, firstname);
   }
 
-  //getting data from SharedPreferences
-
   static Future<bool> getUserLogInPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.getBool(sharedPreferenceUserLoggedInKey);

@@ -1,16 +1,15 @@
-import 'dart:ffi';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/icon_button.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Screens/schedule.dart';
+import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/justin_main.dart';
 import 'package:moimapp/presentation/moim_icons.dart';
 import 'package:moimapp/widgets/todo.dart';
+import 'package:moimapp/services/auth.dart';
 
 import '../calculator.dart';
 import 'messages/message_home.dart';
@@ -18,7 +17,7 @@ import 'messages/message_home.dart';
 //
 
 class Home extends StatelessWidget{
-
+  final AuthMethods authMethods = new AuthMethods();
   void _showUserInfo(BuildContext context, String userEmail, String userCollege){
     showDialog(
         context: context,
@@ -32,6 +31,18 @@ class Home extends StatelessWidget{
               ],
             ),
             actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  authMethods.signOut();
+                  HelperFunctions.saveUserLogInPreference(false);
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => SignIn()));
+                },
+              ),
               FlatButton(
                 child: Text("Close"),
                 onPressed: (){
@@ -49,6 +60,18 @@ class Home extends StatelessWidget{
       appBar: AppBar(
         title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
         elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            authMethods.signOut();
+            HelperFunctions.saveUserLogInPreference(false);
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => SignIn()));
+          },
+        ),
         backgroundColor: Colors.lightBlue,
         actions: <Widget>[
           GestureDetector(
@@ -107,6 +130,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyHomePageState extends State<MyHomePage> {
+  AuthMethods authMethods = new AuthMethods();
   bool isLoading = false;
   int _currentIndex = 0;
   final List<Widget> _children = [
@@ -147,6 +171,57 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
 //        appBar: AppBar(
 //          backgroundColor: Colors.blue[50],
+//          leading: IconButton(
+//            icon: Icon(
+//              Icons.exit_to_app,
+//              color: Colors.black,
+//            ),
+//            onPressed: () {
+//              authMethods.signOut();
+//              HelperFunctions.saveUserLogInPreference(false);
+//              Navigator.pushReplacement(
+//                  context, MaterialPageRoute(builder: (context) => SignIn()));
+//            },
+//          ),
+//          actions: <Widget>[
+//            // action button
+//            IconButton(
+//              icon: Icon(
+//                Icons.person_outline,
+//                color: Colors.black,
+//              ),
+//              onPressed: () {
+//                {}
+//              },
+//            ),
+//            IconButton(
+//              icon: Icon(
+//                Icons.search,
+//                color: Colors.black,
+//              ),
+//              onPressed: () {
+//                {
+//                  print(Constants.myUsername);
+//                }
+//              },
+//            ),
+//            // IconButton(
+//            //   icon: Icon(
+//            //     Icons.notifications,
+//            //     color: Colors.black,
+//            //   ),
+//            //   onPressed: () {
+//            //     {}
+//            //     ;
+//            //   },
+//            // ),
+//          ],
+//        ),
+        body: isLoading
+            ? Center(child: Container(child: CircularProgressIndicator()))
+            : _children[_currentIndex],
+//        appBar: AppBar(
+//          backgroundColor: Colors.blue[50],
 //          actions: <Widget>[
 //            // action button
 //            IconButton(
@@ -181,7 +256,7 @@ class MyHomePageState extends State<MyHomePage> {
 //            // ),
 //          ],
 //        ),
-        body: _children[_currentIndex],
+//        body: _children[_currentIndex],
 //        body: Column(
 //          mainAxisAlignment: MainAxisAlignment.center,
 //          crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,19 +272,19 @@ class MyHomePageState extends State<MyHomePage> {
           currentIndex: _currentIndex,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Moim.home_icon_01),
               title: Text(
                 'Home',
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.format_list_bulleted),
+              icon: Icon(Moim.community_icon__1_),
               title: Text(
                 'Feed',
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
+              icon: Icon(Moim.calendar_icon_01),
               title: Text(
                 'Schedule',
               ),

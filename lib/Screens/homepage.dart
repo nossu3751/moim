@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/icon_button.dart';
@@ -8,6 +9,7 @@ import 'package:moimapp/Screens/schedule.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/justin_main.dart';
+import 'package:moimapp/presentation/moim_icons.dart';
 import 'package:moimapp/widgets/todo.dart';
 
 import '../calculator.dart';
@@ -16,9 +18,50 @@ import 'messages/message_home.dart';
 //
 
 class Home extends StatelessWidget{
+
+  void _showUserInfo(BuildContext context, String userEmail, String userCollege){
+    showDialog(
+        context: context,
+        builder:(context){
+          return AlertDialog(
+            title: Text("User Info"),
+            content: Column(
+              children: <Widget>[
+                Text(userEmail),
+                Text(userCollege),
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Close"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              )
+            ]
+          );
+        }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
+        elevation: 0,
+        backgroundColor: Colors.lightBlue,
+        actions: <Widget>[
+          GestureDetector(
+//            child: Image.asset('assets/images/moim_profile.png',fit: BoxFit.contain, height: 35),
+            onTap: () async{
+              String userCollege = await HelperFunctions.getUserCollegePreference();
+              String userEmail = await HelperFunctions.getUserEmailPreference();
+              _showUserInfo(context,userEmail,userCollege);
+            },
+            child: Icon(Moim.profile_icon, color: Colors.white, size: 60)
+          )
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

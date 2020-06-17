@@ -5,6 +5,7 @@ class HelperFunctions {
   static String sharedPreferenceUserNameKey = 'USERNAMEKEY';
   static String sharedPreferenceUserEmailKey = 'USEREMAILKEY';
   static String sharedPreferenceUserCollegeKey = 'USERCOLLEGEKEY';
+  static String sharedPreferenceUserFirstNameKey = 'USERFIRSTNAMEKEY';
 
   //saving data to SharedPreference
   // If function is Static, I can use the function anywhere
@@ -31,6 +32,11 @@ class HelperFunctions {
     return await prefs.setString(sharedPreferenceUserCollegeKey, college);
   }
 
+  static Future<void> saveUserFirstNamePreference(String firstname) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setString(sharedPreferenceUserFirstNameKey, firstname);
+  }
+
   //getting data from SharedPreferences
 
   static Future<bool> getUserLogInPreference() async {
@@ -51,5 +57,10 @@ class HelperFunctions {
   static Future<String> getUserCollegePreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.getString(sharedPreferenceUserCollegeKey);
+  }
+
+  static Future<String> getUserFirstNamePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getString(sharedPreferenceUserFirstNameKey);
   }
 }

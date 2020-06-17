@@ -3,8 +3,5 @@ class Constants {
   static String myUsername;
   static String myCollege;
   static String myFirstname;
-  static String myLastname;
-  static String mySchoolYear;
-  static String myMajor;
   static String myEmail;
 }

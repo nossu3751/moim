@@ -40,18 +40,6 @@ class _SignInState extends State<SignIn> {
         isLoading = true;
       });
 
-      databaseMethods
-          .getUserByEmail(
-              'Mount Holyoke College', emailTextEditingContoller.text)
-          .then((val) {
-        snapshotUserInfo = val;
-        // TODO: add more info that i want to store
-        HelperFunctions.saveUserNamePreference(
-            snapshotUserInfo.documents[0].data['name']);
-        HelperFunctions.saveUserCollegePreference(
-            snapshotUserInfo.documents[0].data['college']);
-      });
-
       authMethods
           .signInWithEmailAndPassword(
               emailTextEditingContoller.text, passwordTextEditingContoller.text)
@@ -65,7 +53,8 @@ class _SignInState extends State<SignIn> {
             text = "Validate your email address";
           });
         } else {
-          HelperFunctions.saveUserLogInPreference(true);
+          uploadUserInfo();
+
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MyHomePage()),
@@ -74,6 +63,23 @@ class _SignInState extends State<SignIn> {
         }
       });
     }
+  }
+
+  uploadUserInfo() async {
+    await databaseMethods
+        .getUserByEmail('Mount Holyoke College', emailTextEditingContoller.text)
+        .then((val) async {
+      snapshotUserInfo = val;
+      await HelperFunctions.saveUserLogInPreference(true);
+      await HelperFunctions.saveUserNamePreference(
+          snapshotUserInfo.documents[0].data['username']);
+      await HelperFunctions.saveUserCollegePreference(
+          snapshotUserInfo.documents[0].data['college']);
+      await HelperFunctions.saveUserFirstNamePreference(
+          snapshotUserInfo.documents[0].data['first_name']);
+      await HelperFunctions.saveUserEmailPreference(
+          snapshotUserInfo.documents[0].data['email']);
+    });
   }
 
   @override

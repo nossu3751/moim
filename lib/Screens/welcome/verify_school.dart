@@ -6,6 +6,7 @@ import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input_forLogin.dart';
 import 'package:moimapp/helper/constants.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/services/auth.dart';
 import 'package:moimapp/services/database_methods.dart';
 
@@ -22,6 +23,7 @@ class _VerifySchoolState extends State<VerifySchool> {
 
   AuthMethods authMethods = new AuthMethods();
   DatabaseMethods databaseMethods = new DatabaseMethods();
+
   TextEditingController passwordTextEditingContoller =
       new TextEditingController();
   TextEditingController confirmPasswordTextEditingContoller =
@@ -30,7 +32,6 @@ class _VerifySchoolState extends State<VerifySchool> {
 
   @override
   void initState() {
-    // isLoggedIn = false;
     super.initState();
   }
 
@@ -50,11 +51,10 @@ class _VerifySchoolState extends State<VerifySchool> {
         };
 
         // not sure where we are using these
-        // HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
-        // HelperFunctions.saveUserCollegePreference(widget.college);
-        // HelperFunctions.saveUserNamePreference(
-        //     usernameTextEditingContoller.text);
-        // Constants.myUsername =await HelperFunctions.getUserNamePreference();
+        HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
+        HelperFunctions.saveUserCollegePreference(widget.college);
+
+        // Constants.myUsername = await HelperFunctions.getUserNamePreference();
         // Constants.myCollege = await HelperFunctions.getUserCollegePreference();
 
         Constants.myEmail = emailTextEditingContoller.text;

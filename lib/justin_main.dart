@@ -17,19 +17,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "Flutter Demo",
-        home: MyHomePage(title: "HELLO WORLD"));
+        home: JustinHomePage(title: "HELLO WORLD"));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class JustinHomePage extends StatefulWidget {
+  JustinHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  MyHomePageState createState() => MyHomePageState();
+  JustinHomePageState createState() => JustinHomePageState();
 }
 
-class MyHomePageState extends State<MyHomePage> {
+class JustinHomePageState extends State<JustinHomePage> {
   int _selectedIndex = 0;
 
   @override

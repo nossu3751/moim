@@ -47,6 +47,14 @@ class TodoState extends State<Todo> {
             length: 2,
             child: Scaffold(
               appBar: AppBar(
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    iconSize: 30.0,
+                    tooltip: "Back",
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                    },
+                  ),
                   elevation: 0,
 //                  title: const Text('Todo List'),
                   title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),

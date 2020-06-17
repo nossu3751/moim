@@ -41,7 +41,7 @@ class Home extends StatelessWidget{
                         onTap: (){
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Todo()),
+                            MaterialPageRoute(builder: (context) => TodoPath()),
                           );
                         }
                     ),

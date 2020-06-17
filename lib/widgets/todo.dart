@@ -13,6 +13,44 @@ import 'package:moimapp/widgets/d_date_calculator.dart';
 import 'package:moimapp/widgets/todolist_builder.dart';
 import 'custom_card.dart';
 
+class TodoPath extends StatefulWidget{
+  @override
+  TodoPathState createState() => TodoPathState();
+}
+
+class TodoPathState extends State<TodoPath>{
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+              elevation: 0,
+              title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
+              bottom: TabBar(
+                  indicatorColor: Color(0XFFFFF684),
+                  tabs: <Widget> [
+                    Tab(
+                        text: "Tasks",
+                        icon: Icon(Icons.note)
+                    ),
+                    Tab(
+                        text: "Complete",
+                        icon: Icon(Icons.check)
+                    )
+                  ]
+              )
+          ),
+          body: TabBarView(
+              children: <Widget> [
+                TodoScaffold(),
+                CompletedTasksList()
+              ]
+          )
+      )
+    );
+  }
+}
 
 class Todo extends StatefulWidget{
   @override
@@ -47,14 +85,6 @@ class TodoState extends State<Todo> {
             length: 2,
             child: Scaffold(
               appBar: AppBar(
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    iconSize: 30.0,
-                    tooltip: "Back",
-                    onPressed: () {
-                      Navigator.pop(context, true);
-                    },
-                  ),
                   elevation: 0,
 //                  title: const Text('Todo List'),
                   title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),

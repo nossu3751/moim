@@ -458,29 +458,53 @@ class _PracticeTwoState extends State<PracticeTwo> {
                           color: Colors.amber,
                           child: Text('COMSC 225'),
                         )),
-                    Positioned(
-                        // if monday, size.width * 0.05 + size.width * 0.19*0
-                        // if tuesday, size.width * 0.05 + size.width * 0.19*1
-                        left: size.width * 0.05 + size.width * 0.19 * 2,
-                        // if 8:00, size.height * 0.03
-                        // if 8:05, size.height * 0.03 + tableInsideBodyHeight * 1,
-                        // if 8:10, size.height * 0.03 + tableInsideBodyHeight * 2,
-                        // if 9:00, size.height * 0.03 + tableInsideBodyHeight * 12
-                        // 1 hour = tableInsideBodyHeight * 12
-                        top: size.height * 0.03 + tableInsideBodyHeight * 36,
-                        // tableBodyHeight represents the height for 5 mins
-                        // if 60 mins class 60/5 = 12
-                        // tableBodyHeight * 12
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: size.width * 0.19,
-                          height: tableInsideBodyHeight * 24,
-                          color: Colors.amber,
-                          child: Text('COMSC 225'),
-                        ))
+                    // Positioned(
+                    //     // if monday, size.width * 0.05 + size.width * 0.19*0
+                    //     // if tuesday, size.width * 0.05 + size.width * 0.19*1
+                    //     left: size.width * 0.05 + size.width * 0.19 * 2,
+                    //     // if 8:00, size.height * 0.03
+                    //     // if 8:05, size.height * 0.03 + tableInsideBodyHeight * 1,
+                    //     // if 8:10, size.height * 0.03 + tableInsideBodyHeight * 2,
+                    //     // if 9:00, size.height * 0.03 + tableInsideBodyHeight * 12
+                    //     // 1 hour = tableInsideBodyHeight * 12
+                    //     top: size.height * 0.03 + tableInsideBodyHeight * 36,
+                    //     // tableBodyHeight represents the height for 5 mins
+                    //     // if 60 mins class 60/5 = 12
+                    //     // tableBodyHeight * 12
+                    //     child: Container(
+                    //       alignment: Alignment.center,
+                    //       width: size.width * 0.19,
+                    //       height: tableInsideBodyHeight * 24,
+                    //       color: Colors.amber,
+                    //       child: Text('COMSC 225'),
+                    //     )),
+                    // returnPositioned(),
                   ],
                 ),
               ]))
             ])));
   }
+}
+
+returnPositioned() {
+  return Positioned(
+      // if monday, size.width * 0.05 + size.width * 0.19*0
+      // if tuesday, size.width * 0.05 + size.width * 0.19*1
+      left: 80,
+      // if 8:00, size.height * 0.03
+      // if 8:05, size.height * 0.03 + tableInsideBodyHeight * 1,
+      // if 8:10, size.height * 0.03 + tableInsideBodyHeight * 2,
+      // if 9:00, size.height * 0.03 + tableInsideBodyHeight * 12
+      // 1 hour = tableInsideBodyHeight * 12
+      top: 80,
+      // tableBodyHeight represents the height for 5 mins
+      // if 60 mins class 60/5 = 12
+      // tableBodyHeight * 12
+      child: Container(
+        alignment: Alignment.center,
+        width: 80,
+        height: 40,
+        color: Colors.amber,
+        child: Text('COMSC 225'),
+      ));
 }

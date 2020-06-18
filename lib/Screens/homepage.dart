@@ -8,9 +8,11 @@ import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/justin_main.dart';
 import 'package:moimapp/presentation/moim_icons.dart';
+import 'package:moimapp/services/database_methods.dart';
 import 'package:moimapp/user/profile.dart';
 import 'package:moimapp/widgets/todo.dart';
 import 'package:moimapp/services/auth.dart';
+import 'dart:developer' as developer;
 
 import '../calculator.dart';
 import 'messages/message_home.dart';
@@ -23,14 +25,34 @@ class Home extends StatefulWidget{
 class HomeState extends State<Home>{
   final AuthMethods authMethods = new AuthMethods();
   String firstName;
+  String userEmail;
 
   void initState(){
     super.initState();
-    _initInfo();
   }
 
-  void _initInfo() async{
+  Future _initInfo() async{
+    DatabaseMethods databaseMethods = new DatabaseMethods();
+
     firstName = await HelperFunctions.getUserFirstNamePreference();
+    userEmail = await HelperFunctions.getUserEmailPreference();
+    developer.log(firstName);
+    developer.log(userEmail);
+
+//    await databaseMethods
+//        .getUserByEmail('Mount Holyoke College', emailTextEditingContoller.text)
+//        .then((val) async {
+//      snapshotUserInfo = val;
+//      await HelperFunctions.saveUserLogInPreference(true);
+//      await HelperFunctions.saveUserNamePreference(
+//          snapshotUserInfo.documents[0].data['username']);
+//      await HelperFunctions.saveUserCollegePreference(
+//          snapshotUserInfo.documents[0].data['college']);
+//      await HelperFunctions.saveUserFirstNamePreference(
+//          snapshotUserInfo.documents[0].data['first_name']);
+//      await HelperFunctions.saveUserEmailPreference(
+//          snapshotUserInfo.documents[0].data['email']);
+//    });
   }
 
   void _showUserInfo(BuildContext context, String userEmail, String userCollege){
@@ -135,9 +157,25 @@ class HomeState extends State<Home>{
                   ]
               )
           ),
-          HighlightText(
-              text: "Hi, " + firstName + "!",
-              fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+          FutureBuilder(
+            future: _initInfo(),
+            builder: (context, snapshot){
+              if(snapshot.connectionState == ConnectionState.done){
+                if(snapshot.hasError){
+                  return Center(
+                      child: Text("not loaded")
+                  );
+                }
+                return HighlightText(
+                    text: firstName,
+                    fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)
+                );
+              }
+              return Center(
+                child: Text("not loaded")
+              );
+            }
+          )
         ],
       )
     );

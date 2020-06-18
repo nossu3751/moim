@@ -159,9 +159,13 @@ class _TodoCreateState extends State<TodoCreate>{
   void _todoUserSetting() async {
     String collegeName = await HelperFunctions.getUserCollegePreference();
     String userEmail = await HelperFunctions.getUserEmailPreference();
+    String firstName = await HelperFunctions.getUserFirstNamePreference();
+    String name = await HelperFunctions.getUserNamePreference();
 
     developer.log(collegeName);
     developer.log(userEmail);
+    developer.log(firstName);
+    developer.log(name);
 
     completeTodo = Firestore.instance.collection(collegeName)
         .document('path')

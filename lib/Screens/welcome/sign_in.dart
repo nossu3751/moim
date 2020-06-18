@@ -7,6 +7,7 @@ import 'package:moimapp/Widgets/round_input_forLogin.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/services/auth.dart';
 import 'package:moimapp/services/database_methods.dart';
+import 'dart:developer' as developer;
 
 class SignIn extends StatefulWidget {
   @override
@@ -22,14 +23,14 @@ class _SignInState extends State<SignIn> {
   AuthMethods authMethods = new AuthMethods();
   DatabaseMethods databaseMethods = new DatabaseMethods();
   TextEditingController emailTextEditingContoller = new TextEditingController();
-  TextEditingController passwordTextEditingContoller =
-      new TextEditingController();
+  TextEditingController passwordTextEditingContoller = new TextEditingController();
 
   signIn() {
     //TODO : implement SignIn() - check if password is correct
     //TODO : condition for each colleges - if @mtholyoke -> then mount holyoke...
     if (formKey.currentState.validate()) {
       HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
+
       setState(() {
         isLoading = true;
       });
@@ -59,6 +60,11 @@ class _SignInState extends State<SignIn> {
   }
 
   uploadUserInfo() async {
+    String debugUserName;
+    String debugCollege;
+    String debugFirstName;
+    String debugEmail;
+
     await databaseMethods
         .getUserByEmail('Mount Holyoke College', emailTextEditingContoller.text)
         .then((val) async {
@@ -73,6 +79,16 @@ class _SignInState extends State<SignIn> {
       await HelperFunctions.saveUserEmailPreference(
           snapshotUserInfo.documents[0].data['email']);
     });
+
+    debugUserName = await HelperFunctions.getUserNamePreference();
+    debugUserName = await HelperFunctions.getUserCollegePreference();
+    debugUserName = await HelperFunctions.getUserFirstNamePreference();
+    debugUserName = await HelperFunctions.getUserEmailPreference();
+
+    developer.log(debugUserName);
+    developer.log(debugCollege);
+    developer.log(debugFirstName);
+    developer.log(debugEmail);
   }
 
   @override

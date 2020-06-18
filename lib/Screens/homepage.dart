@@ -8,6 +8,7 @@ import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/justin_main.dart';
 import 'package:moimapp/presentation/moim_icons.dart';
+import 'package:moimapp/user/profile.dart';
 import 'package:moimapp/widgets/todo.dart';
 import 'package:moimapp/services/auth.dart';
 
@@ -15,9 +16,23 @@ import '../calculator.dart';
 import 'messages/message_home.dart';
 
 //
-
-class Home extends StatelessWidget{
+class Home extends StatefulWidget{
+  @override
+  HomeState createState() => HomeState();
+}
+class HomeState extends State<Home>{
   final AuthMethods authMethods = new AuthMethods();
+  String firstName;
+
+  void initState(){
+    super.initState();
+    _initInfo();
+  }
+
+  void _initInfo() async{
+    firstName = await HelperFunctions.getUserFirstNamePreference();
+  }
+
   void _showUserInfo(BuildContext context, String userEmail, String userCollege){
     showDialog(
         context: context,
@@ -79,7 +94,13 @@ class Home extends StatelessWidget{
             onTap: () async{
               String userCollege = await HelperFunctions.getUserCollegePreference();
               String userEmail = await HelperFunctions.getUserEmailPreference();
-              _showUserInfo(context,userEmail,userCollege);
+//              _showUserInfo(context,userEmail,userCollege);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserPage()
+                )
+              );
             },
             child: Icon(Moim.profile_icon, color: Colors.white, size: 60)
           )
@@ -115,9 +136,8 @@ class Home extends StatelessWidget{
               )
           ),
           HighlightText(
-              text: 'HomePage .',
-              fontStyle:
-              TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+              text: "Hi, " + firstName + "!",
+              fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
         ],
       )
     );

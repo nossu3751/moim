@@ -6,7 +6,11 @@ import 'package:moimapp/Screens/schedule.dart';
 import 'package:moimapp/Screens/welcome/sign_up.dart';
 //import 'package:moimapp/Screens/welcome/welcome_screen.dart';
 import 'package:moimapp/Screens/homepage.dart';
+import 'package:moimapp/widgets/completedTaskList.dart';
+import 'package:moimapp/widgets/taskList.dart';
 import 'package:moimapp/widgets/todo.dart';
+import 'package:moimapp/widgets/todo_create_category.dart';
+import 'package:moimapp/widgets/todolist.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,6 +50,53 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: userLoggedIn ? MyHomePage() : SignIn(),
+//      initialRoute: userLoggedIn? '/': '/signIn',
+//      routes: {
+////        '/': (context) => TodoScaffold(),
+////        '/': (context) => TodoScaffold(tasks: tasks, onToggle: onTaskToggled,),
+//        '/todo': (context) => DefaultTabController(
+//            length: 2,
+//            child: Scaffold(
+//                appBar: AppBar(
+//                    leading: IconButton(
+//                      icon: Icon(Icons.arrow_back),
+//                      iconSize: 30.0,
+//                      tooltip: "Back",
+//                      onPressed: () {
+//                        Navigator.pop(context, true);
+//                      },
+//                    ),
+//                    elevation: 0,
+////                  title: const Text('Todo List'),
+//                    title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
+//                    bottom: TabBar(
+//                        indicatorColor: Color(0XFFFFF684),
+//                        tabs: <Widget> [
+//                          Tab(
+//                              text: "Tasks",
+//                              icon: Icon(Icons.note)
+//                          ),
+//                          Tab(
+//                              text: "Complete",
+//                              icon: Icon(Icons.check)
+//                          )
+//                        ]
+//                    )
+//                ),
+//                body: TabBarView(
+//                    children: <Widget> [
+//                      TodoScaffold(),
+//                      CompletedTasksList()
+//                    ]
+//                )
+//            )
+//        ),
+//        '/create': (context) => TodoCreate(onCreate: onTaskCreated,),
+//        '/create_category': (context) => TodoCreateCategory(),
+//        '/signIn': (context) => SignIn(),
+//        '/': (context) => MyHomePage(),
+//      },
+//
       //home: SchedulePage(),
     );
   }

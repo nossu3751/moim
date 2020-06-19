@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
+import 'dart:developer' as developer;
 
 class CompletedTasksList extends StatefulWidget{
   final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
@@ -9,23 +11,60 @@ class CompletedTasksList extends StatefulWidget{
 }
 
 class CompletedTasksListState extends State<CompletedTasksList>{
+  CollectionReference completeTodo;
+  CollectionReference incompleteTodo;
+
   @override
-  Widget build(BuildContext context) {
+  void initState(){
+    super.initState();
+//    _todoUserSetting();
+  }
+
+  Future _todoUserSetting() async {
+    String collegeName = await HelperFunctions.getUserCollegePreference();
+    String userEmail = await HelperFunctions.getUserEmailPreference();
+
+    developer.log(collegeName);
+    developer.log(userEmail);
+
+    completeTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('completeTasks');
+    incompleteTodo = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('incompleteTasks');
+
+    String isNull = incompleteTodo == null ? "this is null":"this has data";
+    developer.log(isNull);
+  }
+
+  Widget _errorScaffold(BuildContext context, AsyncSnapshot snapshot){
     return Scaffold(
-      body: StreamBuilder<QuerySnapshot>(
-          stream: widget.completedCollection.snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-            if(snapshot.hasError)
-              return Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState){
-              case ConnectionState.waiting:
-                return Container(
-                    child: Center(
-                        child: CircularProgressIndicator()
-                    )
-                );
-              default:
-                return Container(
+      body: Center(
+        child: CircularProgressIndicator()
+      )
+    );
+  }
+
+  Widget _completeTodoBuilder(BuildContext context, AsyncSnapshot snapshot){
+    return StreamBuilder<QuerySnapshot>(
+        stream: completeTodo.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+          if(snapshot.hasError)
+            return Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState){
+            case ConnectionState.waiting:
+              return Container(
+                  child: Center(
+                      child: CircularProgressIndicator()
+                  )
+              );
+            default:
+              return Container(
                   constraints: BoxConstraints.expand(),
                   child:ListView(
                     children: snapshot.data.documents.map((DocumentSnapshot document){
@@ -35,14 +74,14 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                         return Dismissible(
                             child: Card(
                                 child: ListTile(
-                                  title: Text(document['name']),
-                                  trailing: Text(
-                                      "completed on " + document['completed_on'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 8,
+                                    title: Text(document['name']),
+                                    trailing: Text(
+                                        "completed on " + document['completed_on'],
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 8,
+                                        )
                                     )
-                                  )
 //                                  trailing: Center(
 //                                    child: Container(
 //                                      height: 50,
@@ -64,9 +103,9 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                             key: Key(document.documentID.toString()),
                             onDismissed: (direction) async {
                               if(direction == DismissDirection.startToEnd){
-                                await widget.completedCollection.document(document.documentID).delete();
+                                await completeTodo.document(document.documentID).delete();
                               }else if(direction == DismissDirection.endToStart){
-                                await widget.incompleteCollection.add({
+                                await incompleteTodo.add({
                                   'name': document['name'],
                                   'content': document['content'],
                                   'due_time': document['due_time'],
@@ -76,7 +115,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                                   'hour': document['hour'],
                                   'minute': document['minute'],
                                 });
-                                await widget.completedCollection.document(document.documentID).delete();
+                                await completeTodo.document(document.documentID).delete();
                               }
                             },
                             background: Padding(
@@ -108,9 +147,25 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                       }
                     }).toList(),
                   )
-                );
-            }
+              );
           }
+        }
+    );
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+        future: _todoUserSetting(),
+        builder: (context, snapshot){
+          if(snapshot.connectionState == ConnectionState.done){
+            if(snapshot.hasError){
+              return _errorScaffold(context, snapshot);
+            }
+            return _completeTodoBuilder(context, snapshot);
+          }
+          return _errorScaffold(context, snapshot);
+        }
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 0,
@@ -132,7 +187,7 @@ class CompletedTasksListState extends State<CompletedTasksList>{
                   FlatButton(
                     child: Text("Remove All"),
                     onPressed:(){
-                      widget.completedCollection.getDocuments().then((snapshot){
+                      completeTodo.getDocuments().then((snapshot){
                         for(DocumentSnapshot doc in snapshot.documents){
                           doc.reference.delete();
                         }

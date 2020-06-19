@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/newCourse.dart';
 import 'package:moimapp/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer' as developer;
 import 'package:moimapp/services/database.dart';
-
 
 class Calculator extends StatefulWidget {
   @override
@@ -11,22 +12,42 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
+  List<String> names = [];
+  String dropdownValue;
+  String selectedValue;
+  String collegeName;
+  String userEmail;
+
+  Future _todoUserSetting() async {
+    collegeName = await HelperFunctions.getUserCollegePreference();
+    userEmail = await HelperFunctions.getUserEmailPreference();
+
+    developer.log(collegeName);
+    developer.log(userEmail);
+
+    QuerySnapshot semester = await Firestore.instance
+        .collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('courseList')
+        .getDocuments();
+
+    var list = semester.documents;
+    for (DocumentSnapshot b in list) {
+      names.add(b.documentID);
+    }
+    dropdownValue = names[0];
+  }
+
   static List<String> semester;
-  final CollectionReference semesterCollection = Firestore.instance.collection('Semesters');
+  final CollectionReference semesterCollection =
+      Firestore.instance.collection('Semesters');
+
   @override
   void initState(){
     super.initState();
-    semester = [];
   }
-
-  String dropdownValue = '';
-  List<String> courses = [
-    "COSI 21A",
-    "MUSIC 2B",
-    "PHIL 110A",
-    "COSI 127B",
-  ];
-
   List<double> score = [
     2.0,
     3.0,
@@ -34,47 +55,62 @@ class _CalculatorState extends State<Calculator> {
     3.4,
   ];
 
-//  List<String> semesters = [
-//    'Spring 2018',
-//    'Fall 2018',
-//    'Spring 2019',
-//    'Fall 2019',
-//  ];
-
-  List<String> semesters(CollectionReference reference, List<String> list) {
-    reference.getDocuments().then((snapshot) async{
-      for(DocumentSnapshot temp in snapshot.documents){
-        list.add(temp["name"] + " " + temp["year"]);
-      }
-    });
-    return list;
+  Widget errorScreen(BuildContext context, AsyncSnapshot snapshot) {
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget calc(BuildContext context, AsyncSnapshot snapshot) {
     return Scaffold(
       backgroundColor: Colors.white10,
       appBar: AppBar(
           elevation: 0.0,
           centerTitle: true,
           backgroundColor: Colors.white12,
-          title: DropdownButton(
-            dropdownColor: Colors.black,
-            iconSize: 30,
-            style: TextStyle(color: Colors.white, fontSize: 20.0),
-            value: dropdownValue,
-            items: semesters(semesterCollection, semester).map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String newValue) {
-              setState(() {
-                dropdownValue = newValue;
-              });
-            },
-          ),
+          title: StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance
+                  .collection(collegeName)
+                  .document('path')
+                  .collection('users')
+                  .document(userEmail)
+                  .collection('courseList')
+                  .snapshots(),
+              builder: (context, snapshotOne) {
+                if (!snapshotOne.hasData) {
+                  return Text("Loading");
+                } else {
+                  List<DropdownMenuItem> items = [];
+                  for (int i = 0; i < snapshotOne.data.documents.length; i++) {
+                    DocumentSnapshot snap = snapshotOne.data.documents[i];
+                    items.add(DropdownMenuItem(
+                      child: Text(
+                        snap.documentID,
+//                          style:
+                      ),
+                      value: "${snap.documentID}",
+                    ));
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DropdownButton(
+                        dropdownColor: Colors.black,
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        items: items,
+                        onChanged: (currentValue) {
+                          setState(() {
+                            selectedValue = currentValue;
+                          });
+                        },
+                        value: selectedValue,
+                        hint: new Text(
+                          "Choose Semester",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ),
+                    ],
+                  );
+                }
+              }),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             iconSize: 30.0,
@@ -159,5 +195,20 @@ class _CalculatorState extends State<Calculator> {
         },
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _todoUserSetting(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return errorScreen(context, snapshot);
+            }
+            return calc(context, snapshot);
+          }
+          return errorScreen(context, snapshot);
+        });
   }
 }

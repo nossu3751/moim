@@ -151,40 +151,40 @@ class JustinHomePageState extends State<JustinHomePage> {
                   }))
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white12,
-          onTap: _onItemTapped,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xFFEFB868),
-          unselectedItemColor: Colors.white,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          iconSize: 40.0,
-          items: [
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.home),
-              title: Text("Home"),
-            ),
-            BottomNavigationBarItem(
-              icon: new Icon(Icons.dashboard),
-              title: Text("Communities"),
-            ),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.calendar_today), title: Text("Calendar")),
-            BottomNavigationBarItem(
-              icon: new IconButton(
-                icon: new Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Calculator()),
-                  );
-                },
-              ),
-              title: Text("Calculator"),
-            ),
-          ]),
+//      bottomNavigationBar: BottomNavigationBar(
+//          backgroundColor: Colors.white12,
+//          onTap: _onItemTapped,
+//          type: BottomNavigationBarType.fixed,
+//          currentIndex: _selectedIndex,
+//          selectedItemColor: Color(0xFFEFB868),
+//          unselectedItemColor: Colors.white,
+//          showSelectedLabels: true,
+//          showUnselectedLabels: true,
+//          iconSize: 40.0,
+//          items: [
+//            BottomNavigationBarItem(
+//              icon: new Icon(Icons.home),
+//              title: Text("Home"),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: new Icon(Icons.dashboard),
+//              title: Text("Communities"),
+//            ),
+//            BottomNavigationBarItem(
+//                icon: new Icon(Icons.calendar_today), title: Text("Calendar")),
+//            BottomNavigationBarItem(
+//              icon: new IconButton(
+//                icon: new Icon(Icons.settings),
+//                onPressed: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(builder: (context) => Calculator()),
+//                  );
+//                },
+//              ),
+//              title: Text("Calculator"),
+//            ),
+//          ]),
     );
   }
 }

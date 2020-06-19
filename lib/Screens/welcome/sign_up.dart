@@ -1,12 +1,9 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:moimapp/Screens/homepage.dart';
-import 'package:moimapp/Screens/messages/message_home.dart';
 import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/Widgets/dropdown_general.dart';
-import 'package:moimapp/Widgets/dropdown.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/round_button.dart';
 import 'package:moimapp/Widgets/round_input_forLogin.dart';
@@ -58,12 +55,6 @@ class _SignUpState extends State<SignUp> {
           firstNameTextEditingContoller.text);
       HelperFunctions.saveUserNamePreference(usernameTextEditingContoller.text);
       HelperFunctions.saveUserLogInPreference(true);
-
-      // Constants.myFirstname = firstNameTextEditingContoller.text;
-      // Constants.myLastname = lastNameTextEditingContoller.text;
-      // Constants.myUsername = usernameTextEditingContoller.text;
-      // Constants.mySchoolYear = widget.schoolYear;
-
       databaseMethods.uploadUserAccountInfo(
           Constants.myCollege, userInfoMap, Constants.myEmail);
     }
@@ -106,10 +97,6 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      // Image.asset(
-                      //   'images/Moim_logo.png',
-                      //   height: size.height * 0.1,
-                      // ),
                       SizedBox(height: size.height * 0.02),
                       Text('Create your ',
                           textAlign: TextAlign.left,
@@ -150,33 +137,18 @@ class _SignUpState extends State<SignUp> {
                                 ),
                               ],
                             ),
-                            // RoundInputWithController(
-                            //   size: size,
-                            //   textFormField: TextFormField(
-                            //     controller: firstNameTextEditingContoller,
-                            //     validator: (val) {},
-                            //     decoration: InputDecoration(
-                            //         hintText: "First Name",
-                            //         border: InputBorder.none),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 10),
-                            // RoundInputWithController(
-                            //   size: size,
-                            //   textFormField: TextFormField(
-                            //     controller: lastNameTextEditingContoller,
-                            //     validator: (val) {},
-                            //     decoration: InputDecoration(
-                            //         hintText: "Last Name",
-                            //         border: InputBorder.none),
-                            //   ),
-                            // ),
+
                             SizedBox(height: 10),
+                            // TODO: username has to be unique
                             RoundedInputWithController(
                               size: size,
                               textFormField: TextFormField(
                                 controller: usernameTextEditingContoller,
-                                validator: (val) {},
+                                validator: (val) {
+                                  return val.isEmpty || val.length < 3
+                                      ? "Enter Username longer than three characters"
+                                      : null;
+                                },
                                 decoration: InputDecoration(
                                     hintText: "Username",
                                     icon: Icon(
@@ -186,48 +158,7 @@ class _SignUpState extends State<SignUp> {
                                     border: InputBorder.none),
                               ),
                             ),
-                            // SizedBox(height: 10),
 
-                            // RoundedInputWithController(
-                            //   size: size,
-                            //   textFormField: TextFormField(
-                            //     obscureText: true,
-                            //     controller: passwordTextEditingContoller,
-                            //     validator: (val) {
-                            //       return val.length < 6
-                            //           ? "Enter Password longer than 6 characters"
-                            //           : null;
-                            //     },
-                            //     decoration: InputDecoration(
-                            //         hintText: "Password",
-                            //         icon: Icon(
-                            //           Icons.lock,
-                            //           color: Colors.grey[900],
-                            //         ),
-                            //         border: InputBorder.none),
-                            //   ),
-                            // ),
-                            // SizedBox(height: 10),
-                            // RoundedInputWithController(
-                            //   size: size,
-                            //   textFormField: TextFormField(
-                            //     obscureText: true,
-                            //     controller: confirmPasswordTextEditingContoller,
-                            //     validator: (val) {
-                            //       return (val !=
-                            //               passwordTextEditingContoller.text)
-                            //           ? "Password doesn't match"
-                            //           : null;
-                            //     },
-                            //     decoration: InputDecoration(
-                            //         hintText: "Confirm Password",
-                            //         icon: Icon(
-                            //           Icons.lock,
-                            //           color: Colors.grey[900],
-                            //         ),
-                            //         border: InputBorder.none),
-                            //   ),
-                            // ),
                             SizedBox(height: 10),
 
                             Container(
@@ -259,7 +190,7 @@ class _SignUpState extends State<SignUp> {
                                   ],
                                 )),
                             SizedBox(height: 10),
-                            // TODO: should be drop down
+                            // TODO: Implement major? should be drop down
                             // RoundedInputWithController(
                             //   size: size,
                             //   textFormField: TextFormField(
@@ -277,7 +208,6 @@ class _SignUpState extends State<SignUp> {
                           ],
                         ),
                       ),
-                      // SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
                           signMeUp();

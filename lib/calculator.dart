@@ -5,10 +5,12 @@ import 'package:moimapp/course.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer' as developer;
 import 'package:moimapp/services/database.dart';
+
 class Calculator extends StatefulWidget {
   @override
   _CalculatorState createState() => _CalculatorState();
 }
+
 class _CalculatorState extends State<Calculator> {
   List<String> names = [];
   String dropdownValue;
@@ -19,8 +21,10 @@ class _CalculatorState extends State<Calculator> {
   Future _todoUserSetting() async {
     collegeName = await HelperFunctions.getUserCollegePreference();
     userEmail = await HelperFunctions.getUserEmailPreference();
+
     developer.log(collegeName);
     developer.log(userEmail);
+
     QuerySnapshot semester = await Firestore.instance
         .collection(collegeName)
         .document('path')
@@ -28,18 +32,20 @@ class _CalculatorState extends State<Calculator> {
         .document(userEmail)
         .collection('courseList')
         .getDocuments();
+
     var list = semester.documents;
     for (DocumentSnapshot b in list) {
       names.add(b.documentID);
     }
     dropdownValue = names[0];
-    developer.log(dropdownValue);
   }
+
   static List<String> semester;
   final CollectionReference semesterCollection =
-  Firestore.instance.collection('Semesters');
+      Firestore.instance.collection('Semesters');
+
   @override
-  void initState() {
+  void initState(){
     super.initState();
   }
   List<double> score = [
@@ -48,6 +54,11 @@ class _CalculatorState extends State<Calculator> {
     4.0,
     3.4,
   ];
+
+  Widget errorScreen(BuildContext context, AsyncSnapshot snapshot) {
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+
   Widget calc(BuildContext context, AsyncSnapshot snapshot) {
     return Scaffold(
       backgroundColor: Colors.white10,
@@ -63,16 +74,14 @@ class _CalculatorState extends State<Calculator> {
                   .document(userEmail)
                   .collection('courseList')
                   .snapshots(),
-              builder: (context, snapshotone) {
-                if (!snapshotone.hasData) {
+              builder: (context, snapshotOne) {
+                if (!snapshotOne.hasData) {
                   return Text("Loading");
-                }
-                else {
-                  List<DropdownMenuItem> Items = [];
-                  for (int i = 0; i < snapshotone.data.documents.length; i++) {
-                    DocumentSnapshot snap = snapshotone.data.documents[i];
-                    Items.add(
-                        DropdownMenuItem(
+                } else {
+                  List<DropdownMenuItem> items = [];
+                  for (int i = 0; i < snapshotOne.data.documents.length; i++) {
+                    DocumentSnapshot snap = snapshotOne.data.documents[i];
+                    items.add(DropdownMenuItem(
                       child: Text(
                         snap.documentID,
 //                          style:
@@ -83,16 +92,20 @@ class _CalculatorState extends State<Calculator> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(Icons.check_circle, size: 25.0, color: Colors.blue),
-                      SizedBox(width: 50.0),
                       DropdownButton(
-                        items: Items,
-                        onChanged: (currentValue){
+                        dropdownColor: Colors.black,
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        items: items,
+                        onChanged: (currentValue) {
                           setState(() {
                             selectedValue = currentValue;
                           });
                         },
                         value: selectedValue,
+                        hint: new Text(
+                          "Choose Semester",
+                          style: TextStyle(color: Colors.white),
+                        )
                       ),
                     ],
                   );
@@ -183,16 +196,19 @@ class _CalculatorState extends State<Calculator> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _todoUserSetting(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {}
+            if (snapshot.hasError) {
+              return errorScreen(context, snapshot);
+            }
             return calc(context, snapshot);
           }
-          return null;
+          return errorScreen(context, snapshot);
         });
   }
 }

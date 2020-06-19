@@ -4,6 +4,7 @@ import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
 import 'package:moimapp/Screens/schedule.dart';
 import 'package:moimapp/Screens/welcome/sign_up.dart';
+
 //import 'package:moimapp/Screens/welcome/welcome_screen.dart';
 import 'package:moimapp/Screens/homepage.dart';
 import 'package:moimapp/widgets/completedTaskList.dart';
@@ -28,16 +29,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    getLoggedInState();
     super.initState();
   }
 
-  getLoggedInState() async {
-    await HelperFunctions.getUserLogInPreference().then((val) {
-      setState(() {
-        userLoggedIn = val;
-      });
-    });
+  Future getLog () async {
+    userLoggedIn = await HelperFunctions.getUserLogInPreference();
+  }
+
+//  getLoggedInState() async {
+//    await HelperFunctions.getUserLogInPreference().then((val) {
+//      setState(() {
+//        userLoggedIn = val;
+//      });
+//    });
+//  }
+
+  Widget _errorMessage(BuildContext context, AsyncSnapshot snapshot) {
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 
   @override
@@ -49,7 +57,18 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: userLoggedIn ? MyHomePage() : SignIn(),
+      home: FutureBuilder(
+        future: getLog(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return _errorMessage(context, snapshot);
+            }
+            return userLoggedIn ? MyHomePage() : SignIn();
+          }
+          return _errorMessage(context, snapshot);
+        },
+      ),
 //      initialRoute: userLoggedIn? '/': '/signIn',
 //      routes: {
 ////        '/': (context) => TodoScaffold(),

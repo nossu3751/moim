@@ -41,6 +41,41 @@ class TodoCreateCategoryState extends State<TodoCreateCategory> {
     developer.log(isNull);
   }
 
+  void _createCategoryDialog(){
+    showDialog(
+        context: context,
+        builder:(context){
+          return AlertDialog(
+              title: Text("Create Category"),
+              content: TextField(
+                  autofocus: true,
+                  controller: categoryName,
+                  decoration: InputDecoration(
+                      labelText: 'Enter Category Name'
+                  )
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text("Save"),
+                  onPressed: () async {
+                    courseCategory.document(categoryName.text).setData({
+                      'name':categoryName.text
+                    });
+                    Navigator.of(context).pop();
+                  },
+                )
+              ]
+          );
+        }
+    );
+  }
+
   Widget _todoCategoryBuilder(BuildContext context, AsyncSnapshot snapshot){
     return StreamBuilder<QuerySnapshot>(
       stream: courseCategory.snapshots(),
@@ -63,7 +98,10 @@ class TodoCreateCategoryState extends State<TodoCreateCategory> {
               child: Column(
                 children: <Widget> [
                   GestureDetector(
-                    onTap: (){developer.log("tapped");},
+                    onTap: (){
+                      developer.log("tapped");
+                      _createCategoryDialog();
+                      },
                     child: Container(
                       height: 70,
                       child: Card(

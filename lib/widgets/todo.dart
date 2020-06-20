@@ -66,6 +66,10 @@ class TodoCreate extends StatefulWidget{
 class _TodoCreateState extends State<TodoCreate>{
   CollectionReference completeTodo;
   CollectionReference incompleteTodo;
+  CollectionReference todoCategory;
+
+  List<String> todoCategoryList = [];
+
   final collection = Firestore.instance.collection('rhosung_tasks');
   final completedCollection = Firestore.instance.collection('rhosungCompletedTasks');
   final taskCategory = Firestore.instance.collection('rhosungTasksCategories');
@@ -82,14 +86,13 @@ class _TodoCreateState extends State<TodoCreate>{
   void initState() {
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
     super.initState();
-    _todoUserSetting();
     completedTaskTitle = [];
 //    completedTaskTitle = completedTaskListBuilder(completedCollection, completedTaskTitle);
     tasksCategory = ["a","b","c","d"];
 
   }
 
-  void _todoUserSetting() async {
+  Future _todoUserSetting() async {
     String collegeName = await HelperFunctions.getUserCollegePreference();
     String userEmail = await HelperFunctions.getUserEmailPreference();
     String firstName = await HelperFunctions.getUserFirstNamePreference();
@@ -110,9 +113,26 @@ class _TodoCreateState extends State<TodoCreate>{
         .collection('users')
         .document(userEmail)
         .collection('incompleteTasks');
+    todoCategory = Firestore.instance.collection(collegeName)
+        .document('path')
+        .collection('users')
+        .document(userEmail)
+        .collection('todoCategory');
+
+    todoCategory.getDocuments().then((snapshot){
+        for(DocumentSnapshot document in snapshot.documents){
+          todoCategoryList.add(document.documentID);
+        }
+      }
+    );
 
     String isNull = incompleteTodo == null ? "this is null":"this has data";
     developer.log(isNull);
+
+    developer.log(todoCategoryList.length.toString());
+    for(String s in todoCategoryList){
+      developer.log(s);
+    }
   }
 
   GlobalKey<AutoCompleteTextFieldState<String>> taskkey = new GlobalKey();
@@ -132,80 +152,99 @@ class _TodoCreateState extends State<TodoCreate>{
     );
   }
 
+  Widget _todoForm(BuildContext context, AsyncSnapshot snapshot){
+    return Center(
+        child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget> [
+                  searchTextField = AutoCompleteTextField<String>(
+                    clearOnSubmit: false,
+                    itemSubmitted: (item){
+                      setState((){
+                        searchTextField.textField.controller.text = item;
+                      });
+                    },
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                    key: taskkey,
+                    suggestions: completedTaskListBuilder(completedCollection, completedTaskTitle),
+                    itemBuilder: (context, item){
+                      return row(item);
+                    },
+                    itemSorter: (a,b){
+                      return a.compareTo(b);
+                    },
+                    itemFilter: (item, query){
+                      return item.toLowerCase().startsWith(query.toLowerCase());
+                    },
+                    decoration: InputDecoration(
+                        labelText: 'Enter your task item name.'
+                    ),
+                  ),
+//
+                  TextField(
+                      autofocus: false,
+                      controller: taskContentController,
+                      decoration: InputDecoration(
+                          labelText: 'Describe your task item.'
+                      )
+                  ),
+                  BasicDateTimeField(
+                    controller:taskDateTimeController,
+                  ),
+                  DropdownButton(
+                    items: tasksCategory.map((value)=>
+                        DropdownMenuItem(
+                          child: Text(
+                              value,
+                              style: TextStyle(
+                                  color: Colors.black
+                              )
+                          ),
+                          value: value,
+                        )
+                    ).toList(),
+                    onChanged: (selectedTasksCategory){
+                      setState(() {
+                        selectedCategory = selectedTasksCategory;
+                      });
+                    },
+                    value: selectedCategory,
+                    isExpanded: true,
+                    dropdownColor: Colors.white,
+                    focusColor: Colors.lightBlue,
+                    hint: Text(
+                        "Select Category"
+                    ),
+
+                  ),
+                  SizedBox(height: 40.0)
+                ]
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text('Create a task')),
-        body: Center(
-            child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget> [
-                      searchTextField = AutoCompleteTextField<String>(
-                        clearOnSubmit: false,
-                        itemSubmitted: (item){
-                          setState((){
-                            searchTextField.textField.controller.text = item;
-                          });
-                        },
-                        style: TextStyle(color: Colors.black, fontSize: 16.0),
-                        key: taskkey,
-                        suggestions: completedTaskListBuilder(completedCollection, completedTaskTitle),
-                        itemBuilder: (context, item){
-                          return row(item);
-                        },
-                        itemSorter: (a,b){
-                          return a.compareTo(b);
-                        },
-                        itemFilter: (item, query){
-                          return item.toLowerCase().startsWith(query.toLowerCase());
-                        },
-                        decoration: InputDecoration(
-                            labelText: 'Enter your task item name.'
-                        ),
-                      ),
-//
-                      TextField(
-                          autofocus: false,
-                          controller: taskContentController,
-                          decoration: InputDecoration(
-                              labelText: 'Describe your task item.'
-                          )
-                      ),
-                      BasicDateTimeField(
-                        controller:taskDateTimeController,
-                      ),
-                      DropdownButton(
-                        items: tasksCategory.map((value)=>
-                            DropdownMenuItem(
-                              child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      color: Colors.black
-                                  )
-                              ),
-                              value: value,
-                            )
-                        ).toList(),
-                        onChanged: (selectedTasksCategory){
-                          setState(() {
-                            selectedCategory = selectedTasksCategory;
-                          });
-                        },
-                        value: selectedCategory,
-                        isExpanded: true,
-                        dropdownColor: Colors.white,
-                        focusColor: Colors.lightBlue,
-                        hint: Text(
-                            "Select Category"
-                        ),
-
-                      ),
-                      SizedBox(height: 40.0)
-                    ]
-                )
-            )
+        body: FutureBuilder(
+          future: _todoUserSetting(),
+          builder: (context, snapshot){
+            if(snapshot.connectionState == ConnectionState.done){
+              if(snapshot.hasError){
+                return Center(
+                  child: CircularProgressIndicator()
+                );
+              }
+              return _todoForm(context, snapshot);
+            }
+            return Center(
+                child: CircularProgressIndicator()
+            );
+          }
         ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.done),

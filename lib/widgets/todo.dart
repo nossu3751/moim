@@ -55,73 +55,6 @@ class TodoPathState extends State<TodoPath>{
   }
 }
 
-//class Todo extends StatefulWidget{
-//  @override
-//  State<StatefulWidget> createState() => TodoState();
-//}
-//
-//class TodoState extends State<Todo> {
-//  final List<Task> tasks = [];
-//
-//  void onTaskCreated(String name){
-//    setState(() {
-//      tasks.add(Task(name));
-//    });
-//  }
-//
-//  void onTaskToggled(Task task){
-//    setState((){
-//      task.setCompleted(!task.isCompleted());
-//    });
-//  }
-//
-//
-//  @override
-//  Widget build(BuildContext context) => MaterialApp(
-//      debugShowCheckedModeBanner: false,
-//      title: 'Todo App',
-//      initialRoute: '/',
-//      routes: {
-////        '/': (context) => TodoScaffold(),
-////        '/': (context) => TodoScaffold(tasks: tasks, onToggle: onTaskToggled,),
-//        '/': (context) => DefaultTabController(
-//            length: 2,
-//            child: Scaffold(
-//              appBar: AppBar(
-//                  elevation: 0,
-////                  title: const Text('Todo List'),
-//                  title: Image.asset('assets/images/moim_white.png', fit: BoxFit.fitHeight, height: 35),
-//                  bottom: TabBar(
-//                      indicatorColor: Color(0XFFFFF684),
-//                      tabs: <Widget> [
-//                        Tab(
-//                            text: "Tasks",
-//                            icon: Icon(Icons.note)
-//                        ),
-//                        Tab(
-//                            text: "Complete",
-//                            icon: Icon(Icons.check)
-//                        )
-//                      ]
-//                  )
-//              ),
-//              body: TabBarView(
-//                children: <Widget> [
-//                  TodoScaffold(),
-//                  CompletedTasksList()
-//                ]
-//              )
-//            )
-//        ),
-//        '/create': (context) => TodoCreate(onCreate: onTaskCreated,),
-//        '/create_category': (context) => TodoCreateCategory(),
-//      },
-//  );
-//}
-//class TodoPractice extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) => Todo();
-//}
 
 class TodoCreate extends StatefulWidget{
   final onCreate;
@@ -296,6 +229,7 @@ class _TodoCreateState extends State<TodoCreate>{
                 'hour': hour,
                 'minute': minute,
               });
+
               Navigator.pop(context);
             }
         )

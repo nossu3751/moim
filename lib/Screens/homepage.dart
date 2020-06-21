@@ -6,7 +6,7 @@ import 'package:moimapp/Screens/schedule.dart';
 import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/helper/helperfunctions.dart';
-import 'package:moimapp/justin_main.dart';
+import 'package:moimapp/Screens/Feed/feedScreen.dart';
 import 'package:moimapp/presentation/moim_icons.dart';
 import 'package:moimapp/services/database_methods.dart';
 import 'package:moimapp/user/profile.dart';
@@ -193,7 +193,7 @@ class MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     Home(),
-    JustinHomePage(),
+    feedScreen(),
     SchedulePage(),
     MessageHome(),
   ];

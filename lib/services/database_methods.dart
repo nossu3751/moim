@@ -101,4 +101,12 @@ class DatabaseMethods {
         .where('users', arrayContains: userName)
         .snapshots();
   }
+
+  getAllPosts(String college, String userName) async {
+    return await Firestore.instance
+        .collection(college)
+        .document('path')
+        .collection('post')
+        .snapshots();
+  }
 }

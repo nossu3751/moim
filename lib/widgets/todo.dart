@@ -67,6 +67,7 @@ class _TodoCreateState extends State<TodoCreate>{
   CollectionReference completeTodo;
   CollectionReference incompleteTodo;
   CollectionReference todoCategory;
+  String selectedCategoryName;
 
   List<String> todoCategoryList = [];
 
@@ -153,17 +154,19 @@ class _TodoCreateState extends State<TodoCreate>{
   }
 
   Widget _todoForm(BuildContext context, AsyncSnapshot snapshot){
+
     return Center(
         child: Padding(
             padding: EdgeInsets.all(16),
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget> [
-                  searchTextField = AutoCompleteTextField<String>(
+                  AutoCompleteTextField<String>(
+                    controller: taskTitleController,
                     clearOnSubmit: false,
                     itemSubmitted: (item){
                       setState((){
-                        searchTextField.textField.controller.text = item;
+                        taskTitleController.text = item;
                       });
                     },
                     style: TextStyle(color: Colors.black, fontSize: 16.0),
@@ -193,33 +196,78 @@ class _TodoCreateState extends State<TodoCreate>{
                   BasicDateTimeField(
                     controller:taskDateTimeController,
                   ),
-                  DropdownButton(
-                    items: tasksCategory.map((value)=>
-                        DropdownMenuItem(
-                          child: Text(
-                              value,
-                              style: TextStyle(
-                                  color: Colors.black
-                              )
-                          ),
-                          value: value,
-                        )
-                    ).toList(),
-                    onChanged: (selectedTasksCategory){
-                      setState(() {
-                        selectedCategory = selectedTasksCategory;
-                      });
-                    },
-                    value: selectedCategory,
-                    isExpanded: true,
-                    dropdownColor: Colors.white,
-                    focusColor: Colors.lightBlue,
-                    hint: Text(
-                        "Select Category"
-                    ),
-
+//                  DropdownButton(
+//                    items: tasksCategory.map((value)=>
+//                        DropdownMenuItem(
+//                          child: Text(
+//                              value,
+//                              style: TextStyle(
+//                                  color: Colors.black
+//                              )
+//                          ),
+//                          value: value,
+//                        )
+//                    ).toList(),
+//                    onChanged: (selectedTasksCategory){
+//                      setState(() {
+//                        selectedCategory = selectedTasksCategory;
+//                      });
+//                    },
+//                    value: selectedCategory,
+//                    isExpanded: true,
+//                    dropdownColor: Colors.white,
+//                    focusColor: Colors.lightBlue,
+//                    hint: Text(
+//                        "Select Category"
+//                    ),
+//                  ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: todoCategory.snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+                      if(snapshot.hasError){
+                        return Center(
+                          child: Text("category list has error")
+                        );
+                      }
+                      if(snapshot.connectionState == ConnectionState.waiting){
+                        return Center(
+                            child: CircularProgressIndicator()
+                        );
+                      }else{
+                        List<DropdownMenuItem> categoryNames = [];
+                        for (DocumentSnapshot document in snapshot.data.documents) {
+                          categoryNames.add(DropdownMenuItem(
+                            child: Text(
+                              document.documentID,
+                            ),
+                            value: "${document.documentID}",
+                          ));
+                        }
+//                        return Row(
+//                          mainAxisAlignment: MainAxisAlignment.center,
+//                          children: <Widget>[
+                        return DropdownButton(
+                                isExpanded: true,
+                                itemHeight: 70,
+                                dropdownColor: Colors.white,
+                                style: TextStyle(color: Colors.black),
+                                items: categoryNames,
+                                onChanged: (currentValue) {
+                                  setState(() {
+                                    selectedCategoryName = currentValue;
+                                  });
+                                },
+                                value: selectedCategoryName,
+                                hint: new Text(
+                                  "Choose Category",
+                                )
+                        );
+//                          ],
+//                        );
+                      }
+                    }
                   ),
-                  SizedBox(height: 40.0)
+
                 ]
             )
         )
@@ -229,7 +277,16 @@ class _TodoCreateState extends State<TodoCreate>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Create a task')),
+        appBar: AppBar(
+          elevation: 0,
+            title: Text(
+                'Create a task',
+                style: TextStyle(
+                  color: Colors.white
+                )
+            ),
+            backgroundColor: Colors.lightBlue,
+        ),
         body: FutureBuilder(
           future: _todoUserSetting(),
           builder: (context, snapshot){
@@ -247,7 +304,12 @@ class _TodoCreateState extends State<TodoCreate>{
           }
         ),
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.done),
+            backgroundColor: Colors.lightBlue,
+            elevation: 0,
+            child: Icon(
+                Icons.done,
+                color: Colors.yellow[300]
+            ),
             onPressed: () async{
               DateTime dueTime = taskDateTimeController.text == ""?null:DateTime.parse(taskDateTimeController.text);
 //          DateTime rightNow = DateTime.now();
@@ -258,10 +320,10 @@ class _TodoCreateState extends State<TodoCreate>{
               String hour = dueTime == null?"":dueTime.hour.toString();
               String minute = dueTime == null?"":dueTime.minute.toString();
               await incompleteTodo.add({
-                'name': searchTextField.textField.controller.text,
+                'name': taskTitleController.text,
                 'content': taskContentController.text,
                 'due_time': taskDateTimeController.text,
-                'category': selectedCategory,
+                'category': selectedCategoryName,
                 'year':year,
                 'month': month,
                 'date': date,

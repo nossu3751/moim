@@ -55,7 +55,8 @@ class WritePostState extends State<WritePost> {
                     .add({
                   'title': title,
                   'content': content,
-                  'writer': Constants.myUsername
+                  'writer': Constants.myUsername,
+                  'last_created': DateTime.now().toString()
                 });
                 Navigator.pop(context);
               },
@@ -133,7 +134,8 @@ class WritePostState extends State<WritePost> {
         .add({
           'title': title,
           'content': content,
-          'writer': Constants.myUsername
+          'writer': Constants.myUsername,
+
     });
   }
 }

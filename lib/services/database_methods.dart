@@ -107,6 +107,7 @@ class DatabaseMethods {
         .collection(college)
         .document('path')
         .collection('post')
+        .orderBy('last_created')
         .snapshots();
   }
 }

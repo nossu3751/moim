@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:moimapp/Screens/Feed/postScreen.dart';
 import 'package:moimapp/Screens/Feed/writePost.dart';
 import 'package:moimapp/Screens/messages/conversation_screen.dart';
 import 'package:moimapp/Screens/messages/search_screen.dart';
@@ -33,7 +34,10 @@ class feedScreenState extends State<feedScreen> {
                   content: snapshot.data.documents[index].data['content']
                       .toString()
                       .replaceAll('_', '')
-                      .replaceAll(Constants.myUsername, ''));
+                      .replaceAll(Constants.myUsername, ''),
+                  userID: snapshot.data.documents[index].data['writer'],
+                  documentID: snapshot.data.documents[index].documentID,
+              );
             })
             : Container();
       },
@@ -61,8 +65,9 @@ class feedScreenState extends State<feedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text('Feed'),
+        backgroundColor: Colors.lightBlue,
+        title: Text('Feed', style: TextStyle(color:Colors.white)),
+        elevation: 0,
       ),
       body: FeedList(),
       floatingActionButton: FloatingActionButton(
@@ -80,40 +85,50 @@ class feedScreenState extends State<feedScreen> {
 class ChatRoomTile extends StatelessWidget {
   final String title;
   final String content;
+  final String userID;
+  final String documentID;
 
-  const ChatRoomTile({Key key, this.title, this.content}) : super(key: key);
+  const ChatRoomTile({Key key, this.title, this.content, this.userID, this.documentID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ConversationScreen(title);
+          return PostScreen(documentID: documentID, title: title, userID: userID, content: content,);
         }));
       },
       child: Container(
         padding: EdgeInsets.all(15),
-        child: Row(children: <Widget>[
-          Column(
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(fontSize: 18),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Column(
-            children: <Widget>[
-              Text(
-                content,
-                style: TextStyle(fontSize: 13),
-              ),
-            ],
-          ),
-        ]),
+        child: ListTile(
+          title: Row(children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Column(
+              children: <Widget>[
+                Text(
+                  content,
+                  style: TextStyle(fontSize: 13),
+                ),
+              ],
+            ),
+          ]),
+          trailing: Text(
+              userID,
+              style: TextStyle(fontSize: 13)
+          )
+
+
+        ),
       ),
     );
   }

@@ -71,7 +71,9 @@ class feedScreenState extends State<feedScreen> {
       ),
       body: FeedList(),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.create),
+          backgroundColor: Colors.lightBlue,
+          elevation: 0,
+          child: Icon(Icons.create, color: Colors.yellow[300]),
           onPressed: () {
             print(Constants.myUsername);
             Navigator.push(context, MaterialPageRoute(builder: (context) {

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:moimapp/Screens/homepage.dart';
 
-class Practice extends StatefulWidget {
+class HeightSchedule extends StatefulWidget {
   @override
-  _PracticeState createState() => _PracticeState();
+  _HeightScheduleState createState() => _HeightScheduleState();
 }
 
-class _PracticeState extends State<Practice> {
+class _HeightScheduleState extends State<HeightSchedule> {
   double iconSize = 40;
 
   @override

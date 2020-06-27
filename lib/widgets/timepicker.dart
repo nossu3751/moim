@@ -126,13 +126,24 @@ class BasicDateField extends StatelessWidget {
   }
 }
 
-class BasicTimeField extends StatelessWidget {
+class BasicTimeField extends StatefulWidget{
+
+  final TextEditingController controller;
+  @override
+  BasicTimeField({@required this.controller});
+
+  @override
+  BasicTimeFieldState createState() => BasicTimeFieldState();
+
+}
+class BasicTimeFieldState extends State<BasicTimeField> {
   final format = DateFormat("hh:mm a");
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       Text('Basic time field (${format.pattern})'),
       DateTimeField(
+        controller: widget.controller,
         format: format,
         onShowPicker: (context, currentValue) async {
           final time = await showTimePicker(
@@ -145,6 +156,7 @@ class BasicTimeField extends StatelessWidget {
     ]);
   }
 }
+
 
 class BasicDateTimeField extends StatefulWidget{
   final TextEditingController controller;

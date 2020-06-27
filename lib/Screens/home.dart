@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moimapp/Screens/prac.dart';
-import 'package:moimapp/Screens/prac_two.dart';
+import 'package:moimapp/Screens/height_schedule_builder.dart';
 import 'package:moimapp/Screens/welcome/sign_in.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/widgets/highlight_text.dart';
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
             GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return PracticeTwo();
+                    return HeightScheduleBuilder();
                   }));
                 },
                 child: Column(

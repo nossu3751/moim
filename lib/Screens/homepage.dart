@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moimapp/Screens/prac.dart';
+import 'package:moimapp/Screens/height_schedule_builder.dart';
 import 'package:moimapp/Widgets/highlight_text.dart';
 import 'package:moimapp/Widgets/icon_button.dart';
 import 'package:moimapp/Widgets/round_button.dart';
@@ -15,6 +17,7 @@ import 'package:moimapp/services/auth.dart';
 import 'dart:developer' as developer;
 
 import '../calculator.dart';
+import 'firebase_schedule_builder.dart';
 import 'messages/message_home.dart';
 
 //
@@ -194,7 +197,7 @@ class MyHomePageState extends State<MyHomePage> {
   final List<Widget> _children = [
     Home(),
     feedScreen(),
-    SchedulePage(),
+    FireStoreSchedule(),
     MessageHome(),
   ];
 

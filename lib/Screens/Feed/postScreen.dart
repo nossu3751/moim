@@ -52,6 +52,7 @@ class PostScreenState extends State<PostScreen>{
               'reply_time': DateTime.now().toString(),
               'num_like': 0,
             });
+            reply.text = "";
           },
           child: Icon(Icons.reply),
       ),
@@ -86,7 +87,7 @@ class PostScreenState extends State<PostScreen>{
                 child: Container(
                   height: 300,
                   child: StreamBuilder(
-                    stream: replyCollection.snapshots(),
+                    stream: replyCollection.orderBy('reply_time').snapshots(),
                     builder: (context, snapshot){
                       if(snapshot.hasError){
                         return _loadingScreen();

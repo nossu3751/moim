@@ -39,7 +39,7 @@ class WritePostState extends State<WritePost> {
           },
         ),
         title: HighlightText(
-            text: 'Wirte Post',
+            text: 'Write Post',
             fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
         actions: <Widget>[
           // action button

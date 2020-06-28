@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moimapp/Screens/schedule_create.dart';
@@ -17,8 +19,11 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
   Set<DocumentReference> myCourses;
   CollectionReference courses;
   CollectionReference userCourses;
+  Stream<List<Widget>> scheduleViewStream;
+  int countBlocks = 0;
 
   Future loadSchedule(BuildContext context) async {
+    var completer = new Completer();
     weekdayFullName = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     weekdayInt = {'Monday':0, 'Tuesday':1, 'Wednesday':2, 'Thursday':3, 'Friday':4,};
     scheduleBlocks = [];
@@ -27,7 +32,7 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
         child: Table(
           defaultVerticalAlignment:
           TableCellVerticalAlignment.middle,
-          border: TableBorder.all(color: Colors.grey[350]),
+          border: TableBorder.all(color: Colors.lightBlueAccent),
           columnWidths: {
             0: FractionColumnWidth(0.05),
             1: FractionColumnWidth(0.19),
@@ -35,7 +40,6 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
             3: FractionColumnWidth(0.19),
             4: FractionColumnWidth(0.19),
             5: FractionColumnWidth(0.19),
-            6: FractionColumnWidth(0.19)
           },
           //build table here.
           children: scheduleTableBuilder(8,7,context),
@@ -53,37 +57,78 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
         .collection('users')
         .document(Constants.myEmail)
         .collection('courseSchedule');
-    await userCourses.getDocuments().then((QuerySnapshot document){
-      document.documents.forEach((course) async {
 
-        //debug reading
+    await userCourses.getDocuments().then((QuerySnapshot document) async {
+
+      for(DocumentSnapshot course in document.documents){
         developer.log(course.documentID);
 
         myCourses.add(courses.document(course.documentID));
         CollectionReference courseDays = userCourses.
-            document(course.documentID).
-            collection('weekdays');
-        await courseDays.getDocuments().then((QuerySnapshot days){
-          days.documents.forEach((day){
-
+          document(course.documentID).
+          collection('weekdays');
+        await courseDays.getDocuments().then((QuerySnapshot days) async {
+          countBlocks += 1;
+          for(DocumentSnapshot day in days.documents){
             developer.log(day.documentID);
 
-            Map<String,dynamic> blockInfo = blockPositionInfoConverter(
-              context,
-              course.documentID,
-              day.documentID,
-              day.data["start_time"],
-              day.data["end_time"]
+//            Map<String,dynamic> blockInfo = blockPositionInfoConverter(
+//                context,
+//                course.documentID,
+//                day.documentID,
+//                day.data["start_time"],
+//                day.data["end_time"]
+//            );
+            await blockPositionInfoConverter(
+                context,
+                course.documentID,
+                day.documentID,
+                day.data["start_time"],
+                day.data["end_time"]
             );
-            scheduleBlocks.add(blockInfo);
-          });
+          }
         });
-      });
+      }
     });
-    await Future.delayed(Duration(milliseconds: 3000));
+//    await Future.delayed(Duration(milliseconds: 2000));
+    completer.complete();
+    return completer.future;
   }
 
-  Map<String,dynamic> blockPositionInfoConverter(BuildContext context, String name, String weekday, String start, String end) {
+  Future<List<Widget>> addScheduleView(BuildContext context, Map<String,dynamic>  blockInfo) async {
+    int countScheduleView = scheduleViews.length;
+    Size size = MediaQuery.of(context).size;
+    double tableTopHeight = size.height * 0.03;
+    double tableBodyHeight = size.height * 0.06;
+    double tableMinuteHeight = tableBodyHeight / 12;
+
+
+    String courseName = blockInfo['course_name'];
+    double verticalPositionRatio = blockInfo['verticalPositionRatio'];
+    int horizontalPositionRatio = blockInfo['horizontalPositionRatio'];
+    double heightRatio = blockInfo['heightRatio'];
+
+    scheduleViews.add(
+        Positioned(
+            left: size.width * 0.05 + size.width * 0.19 * horizontalPositionRatio,
+            top: tableTopHeight + tableBodyHeight * (verticalPositionRatio - 8),
+            child: GestureDetector(
+                onTap: null,
+                child: Container(
+                    alignment: Alignment.center,
+                    width: size.width * 0.19,
+                    height: tableBodyHeight * heightRatio,
+                    color: Colors.pink[200],
+                    child: Text(courseName)
+                )
+            )
+        )
+    );
+
+    return scheduleViews;
+  }
+
+  Future blockPositionInfoConverter(BuildContext context, String name, String weekday, String start, String end) async {
 
     developer.log(name);
     developer.log(weekday);
@@ -96,6 +141,8 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
       'horizontalPositionRatio': null,
       'heightRatio': null,
     };
+
+    scheduleBlocks.add(blockInfo);
 
     String endTime = end.split(" ")[0];
     double endHour = double.parse(endTime.split(":")[0]);
@@ -131,9 +178,9 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
 
     developer.log(blockInfo['verticalPositionRatio'].toString());
 
-    scheduleViews.add(scheduleBlock(context,blockInfo));
+    scheduleViewStream = new Stream.fromFuture(addScheduleView(context, blockInfo));
+//    scheduleViews.add(scheduleBlock(context,blockInfo));
     developer.log("there are " + scheduleViews.length.toString() + " blocks now");
-
     return blockInfo;
   }
 
@@ -267,22 +314,19 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
     return tableRows;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
 
-    Size size = MediaQuery.of(context).size;
-    double tableTopHeight = size.height * 0.03;
-    double tableBodyHeight = size.height * 0.06;
-    double tableMinuteHeight = tableBodyHeight / 12;
-
-
-
     return FutureBuilder(
+//      future: Future.wait([
+//        loadSchedule(context),
+////        addScheduleView(context, scheduleBlocks)
+//      ]),
       future: loadSchedule(context),
       builder: (context,snapshot){
 
+        developer.log(countBlocks.toString() + " blocks there when built");
+        developer.log("there are " + scheduleBlocks.length.toString() + " positions built.");
         developer.log("there are " + scheduleViews.length.toString() + " positions built.");
 
         if(snapshot.connectionState == ConnectionState.done){
@@ -296,16 +340,33 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
               elevation: 0,
               backgroundColor: Colors.lightBlue,
             ),
-            body: Container(
-                padding: EdgeInsets.only(top: 20),
-                child: Column(children: <Widget>[
-                  Center(
-                      child: Column(children: <Widget>[
-                        Stack(
-                          children: scheduleViews,
-                        ),
-                      ]))
-                ])),
+            body: StreamBuilder(
+              stream: scheduleViewStream,
+              builder: (context, stream){
+                if(stream.hasError){
+                  return loadingScreen();
+                }else if(stream.connectionState == ConnectionState.waiting){
+                  return loadingScreen();
+                }else{
+                  return Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Column(
+                          children: <Widget>[
+                            Center(
+                                child: Column(
+                                    children: <Widget>[
+                                      Stack(
+                                        children: stream.data,
+                                      ),
+                                    ]
+                                )
+                            )
+                          ]
+                      )
+                  );
+                }
+              }
+            ),
             floatingActionButton: FloatingActionButton(
               onPressed: (){
                 Navigator.push(

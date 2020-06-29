@@ -1,20 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:moimapp/Screens/schedule_create.dart';
-import 'package:moimapp/Screens/schedule_information.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'dart:developer' as developer;
 
+class ScheduleInformation{
 
-
-class FireStoreSchedule extends StatefulWidget{
-  @override
-  FireStoreScheduleState createState() => FireStoreScheduleState();
-}
-
-class FireStoreScheduleState extends State<FireStoreSchedule>{
   List<String> weekdayFullName;
   Map<String,int> weekdayInt;
   List<Map<String,dynamic>> scheduleBlocks;
@@ -23,12 +13,11 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
   CollectionReference courses;
   CollectionReference userCourses;
   Stream<List<Widget>> scheduleViewStream;
-  Stream<List<Map<String, String>>> courseDataStream;
-  List<Map<String,String>> courseData;
-  int countBlocks;
+  Stream<Map<String, AsyncSnapshot>> courseDataStream;
+  int countBlocks = 0;
 
   Future loadSchedule (BuildContext context) async {
-    countBlocks = 0;
+
     weekdayFullName = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     weekdayInt = {'Monday':0, 'Tuesday':1, 'Wednesday':2, 'Thursday':3, 'Friday':4,};
     scheduleBlocks = [];
@@ -76,7 +65,7 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
           countBlocks += 1;
           for(DocumentSnapshot day in days.documents){
             developer.log(day.documentID);
-//            courseData.add({course.documentID: day.documentID});
+
             await blockPositionInfoConverter(
                 context,
                 course.documentID,
@@ -88,7 +77,6 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
         });
       }
     });
-//    return courseData;
   }
 
   Future<List<Widget>> addScheduleView(BuildContext context, Map<String,dynamic>  blockInfo) async {
@@ -191,7 +179,7 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
 
   Widget loadingScreen(){
     return Center(
-      child: CircularProgressIndicator()
+        child: CircularProgressIndicator()
     );
   }
 
@@ -231,8 +219,11 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
     List<TableRow> tableRows = [];
     List<String> weekdays = ["Mon","Tue","Wed","Thu","Fri"];
     List<Column> tableHead = [];
-
-    tableHead.add(Column(children: [Container(),]));
+    tableHead.add(
+        Column(children: [
+          Container(),
+        ])
+    );
 
     for(int i = 0; i < weekdays.length; i++){
       tableHead.add(
@@ -247,9 +238,13 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
       );
     }
 
-    if(lastTime <= firstTime) lastTime+=12;
+    if(lastTime <= firstTime){
+      lastTime+=12;
+    }
 
-    tableRows.add(TableRow(children: tableHead));
+    tableRows.add(
+        TableRow(children: tableHead)
+    );
 
     for(int i = firstTime; i <= lastTime; i++){
       List<Column> tableBody = [];
@@ -276,82 +271,5 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
       );
     }
     return tableRows;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return FutureBuilder(
-      future: loadSchedule(context),
-      builder: (context,snapshot){
-
-        developer.log(countBlocks.toString() + " blocks there when built");
-        developer.log("there are " + scheduleBlocks.length.toString() + " positions built.");
-        developer.log("there are " + scheduleViews.length.toString() + " positions built.");
-
-        if(snapshot.connectionState == ConnectionState.done){
-          if(snapshot.hasError){
-            return loadingScreen();
-          }else{
-            return Scaffold(
-              appBar:AppBar(
-                title: Text(
-                    "Course Schedule",
-                    style: TextStyle(color: Colors.white)
-                ),
-                elevation: 0,
-                backgroundColor: Colors.lightBlue,
-              ),
-              body: StreamBuilder(
-                  stream: scheduleViewStream,
-                  builder: (context, stream){
-                    if(stream.hasError){
-                      return loadingScreen();
-                    }else if(stream.connectionState == ConnectionState.waiting){
-                      return loadingScreen();
-                    }else{
-                      return Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: Column(
-                              children: <Widget>[
-                                Center(
-                                    child: Column(
-                                        children: <Widget>[
-                                          Stack(
-                                            children: stream.data,
-                                          ),
-                                        ]
-                                    )
-                                )
-                              ]
-                          )
-                      );
-                    }
-                  }
-              ),
-              floatingActionButton: FloatingActionButton(
-                  onPressed: (){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateSchedule((){
-                              setState((){
-
-                              });
-                            })
-                        )
-                    );
-                  },
-                  child: Icon(Icons.create, color: Colors.yellow[300]),
-                  backgroundColor: Colors.lightBlue,
-                  elevation: 0
-              ),
-            );
-          }
-        }else{
-          return loadingScreen();
-        }
-      }
-    );
   }
 }

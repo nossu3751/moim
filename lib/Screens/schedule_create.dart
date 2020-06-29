@@ -6,7 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:moimapp/helper/constants.dart';
 import 'package:moimapp/widgets/timepicker.dart';
 
+import 'firebase_schedule_builder.dart';
+typedef DoRebuild = void Function();
 class CreateSchedule extends StatefulWidget{
+//  final Function refresh;
+//  @override
+//  CreateSchedule({@required this.refresh});
+  final DoRebuild callback;
+  CreateSchedule(this.callback);
   @override
   CreateScheduleState createState() => CreateScheduleState();
 }
@@ -45,6 +52,30 @@ class CreateScheduleState extends State<CreateSchedule>{
         )
       );
     }
+  }
+
+  Future setCourseData() async {
+    await courses.document(courseCode.text).setData({
+      'course_code': courseCode.text,
+      'course_title': courseTitle.text,
+      'professor_name': professorName.text,
+    });
+    await courses.document(courseCode.text).collection('weekdays').document(selectedWeekday).setData({
+      'start_time': startTime.text,
+      'end_time': endTime.text,
+    });
+  }
+
+  Future setUserCourseData() async{
+    await userCourses.document(courseCode.text).setData({
+      'course_code': courseCode.text,
+      'course_title': courseTitle.text,
+      'professor_name': professorName.text,
+    });
+    await userCourses.document(courseCode.text).collection('weekdays').document(selectedWeekday).setData({
+      'start_time': startTime.text,
+      'end_time': endTime.text,
+    });
   }
 
   Widget scheduleForm(){
@@ -106,24 +137,12 @@ class CreateScheduleState extends State<CreateSchedule>{
       body: scheduleForm(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async{
-          await courses.document(courseCode.text).setData({
-            'course_code': courseCode.text,
-            'course_title': courseTitle.text,
-            'professor_name': professorName.text,
-          });
-          await courses.document(courseCode.text).collection('weekdays').document(selectedWeekday).setData({
-            'start_time': startTime.text,
-            'end_time': endTime.text,
-          });
-          await userCourses.document(courseCode.text).setData({
-            'course_code': courseCode.text,
-            'course_title': courseTitle.text,
-            'professor_name': professorName.text,
-          });
-          await userCourses.document(courseCode.text).collection('weekdays').document(selectedWeekday).setData({
-            'start_time': startTime.text,
-            'end_time': endTime.text,
-          });
+          await Future.wait([
+            setCourseData(),
+            setUserCourseData(),
+          ]);
+//          widget.refresh(context);
+          widget.callback();
           Navigator.pop(context);
         },
         child: Icon(Icons.check, color: Colors.yellow[300]),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:moimapp/Screens/course_info.dart';
 import 'package:moimapp/Screens/schedule_create.dart';
 import 'package:moimapp/Screens/schedule_information.dart';
 import 'package:moimapp/helper/constants.dart';
@@ -109,7 +110,14 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
             left: size.width * 0.05 + size.width * 0.19 * horizontalPositionRatio,
             top: tableTopHeight + tableBodyHeight * (verticalPositionRatio - 8),
             child: GestureDetector(
-                onTap: null,
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => new ClassInfo(courseName)
+                    )
+                  );
+                },
                 child: Container(
                     alignment: Alignment.center,
                     width: size.width * 0.19,

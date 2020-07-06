@@ -34,23 +34,7 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
     weekdayInt = {'Monday':0, 'Tuesday':1, 'Wednesday':2, 'Thursday':3, 'Friday':4,};
     scheduleBlocks = [];
     scheduleViews = [
-      Container(
-        child: Table(
-          defaultVerticalAlignment:
-          TableCellVerticalAlignment.middle,
-          border: TableBorder.all(color: Colors.lightBlueAccent),
-          columnWidths: {
-            0: FractionColumnWidth(0.05),
-            1: FractionColumnWidth(0.19),
-            2: FractionColumnWidth(0.19),
-            3: FractionColumnWidth(0.19),
-            4: FractionColumnWidth(0.19),
-            5: FractionColumnWidth(0.19),
-          },
-          //build table here.
-          children: scheduleTableBuilder(8,7,context),
-        ),
-      )
+      scheduleTable(context),
     ];
     myCourses = new Set();
     courses = Firestore.instance
@@ -90,6 +74,26 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
       }
     });
 //    return courseData;
+  }
+
+  Widget scheduleTable(BuildContext context){
+    return Container(
+      child: Table(
+        defaultVerticalAlignment:
+        TableCellVerticalAlignment.middle,
+        border: TableBorder.all(color: Colors.lightBlueAccent),
+        columnWidths: {
+          0: FractionColumnWidth(0.05),
+          1: FractionColumnWidth(0.19),
+          2: FractionColumnWidth(0.19),
+          3: FractionColumnWidth(0.19),
+          4: FractionColumnWidth(0.19),
+          5: FractionColumnWidth(0.19),
+        },
+        //build table here.
+        children: scheduleTableBuilder(8,7,context),
+      ),
+    );
   }
 
   Future<List<Widget>> addScheduleView(BuildContext context, Map<String,dynamic>  blockInfo) async {
@@ -326,7 +330,7 @@ class FireStoreScheduleState extends State<FireStoreSchedule>{
                                     child: Column(
                                         children: <Widget>[
                                           Stack(
-                                            children: stream.data,
+                                            children: stream.data != null ? stream.data: <Widget>[scheduleTable(context)] ,
                                           ),
                                         ]
                                     )

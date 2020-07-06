@@ -110,4 +110,15 @@ class DatabaseMethods {
         .orderBy('last_created')
         .snapshots();
   }
+
+  static Future<String> getCollegeByEmail(String email) async{
+    String college;
+    await Firestore.instance.collection('all_users')
+        .document(email)
+        .get().then((document){
+          college = document.data['college'];
+        }
+    );
+    return college;
+  }
 }

@@ -56,7 +56,8 @@ class _SignUpState extends State<SignUp> {
       HelperFunctions.saveUserNamePreference(usernameTextEditingContoller.text);
       HelperFunctions.saveUserLogInPreference(true);
       databaseMethods.uploadUserAccountInfo(
-          Constants.myCollege, userInfoMap, Constants.myEmail);
+          Constants.myCollege, userInfoMap, Constants.myEmail
+      );
     }
   }
 
@@ -301,6 +302,7 @@ class RoundInputWithController extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50), color: Colors.grey[100]),
         width: size.width * 0.39,
-        child: textFormField);
+        child: textFormField
+    );
   }
 }

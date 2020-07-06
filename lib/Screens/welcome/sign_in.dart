@@ -26,8 +26,6 @@ class _SignInState extends State<SignIn> {
   TextEditingController passwordTextEditingContoller = new TextEditingController();
 
   signIn() {
-    //TODO : implement SignIn() - check if password is correct
-    //TODO : condition for each colleges - if @mtholyoke -> then mount holyoke...
     if (formKey.currentState.validate()) {
       HelperFunctions.saveUserEmailPreference(emailTextEditingContoller.text);
 
@@ -60,35 +58,37 @@ class _SignInState extends State<SignIn> {
   }
 
   uploadUserInfo() async {
-    String debugUserName;
-    String debugCollege;
-    String debugFirstName;
-    String debugEmail;
+//    String debugUserName;
+//    String debugCollege;
+//    String debugFirstName;
+//    String debugEmail;
+    var college = await DatabaseMethods.getCollegeByEmail(emailTextEditingContoller.text);
+
+    developer.log(college);
 
     await databaseMethods
-        .getUserByEmail('Mount Holyoke College', emailTextEditingContoller.text)
+        .getUserByEmail(college, emailTextEditingContoller.text)
         .then((val) async {
       snapshotUserInfo = val;
       await HelperFunctions.saveUserLogInPreference(true);
       await HelperFunctions.saveUserNamePreference(
           snapshotUserInfo.documents[0].data['username']);
-      await HelperFunctions.saveUserCollegePreference(
-          snapshotUserInfo.documents[0].data['college']);
+      await HelperFunctions.saveUserCollegePreference(college);
       await HelperFunctions.saveUserFirstNamePreference(
           snapshotUserInfo.documents[0].data['first_name']);
       await HelperFunctions.saveUserEmailPreference(
           snapshotUserInfo.documents[0].data['email']);
     });
 
-    debugUserName = await HelperFunctions.getUserNamePreference();
-    debugUserName = await HelperFunctions.getUserCollegePreference();
-    debugUserName = await HelperFunctions.getUserFirstNamePreference();
-    debugUserName = await HelperFunctions.getUserEmailPreference();
-
-    developer.log(debugUserName);
-    developer.log(debugCollege);
-    developer.log(debugFirstName);
-    developer.log(debugEmail);
+//    debugUserName = await HelperFunctions.getUserNamePreference();
+//    debugUserName = await HelperFunctions.getUserCollegePreference();
+//    debugUserName = await HelperFunctions.getUserFirstNamePreference();
+//    debugUserName = await HelperFunctions.getUserEmailPreference();
+//
+//    developer.log(debugUserName);
+//    developer.log(debugCollege);
+//    developer.log(debugFirstName);
+//    developer.log(debugEmail);
   }
 
   @override
@@ -151,32 +151,6 @@ class _SignInState extends State<SignIn> {
                 ],
               ),
             ),
-
-            // RoundedInput(
-            //   size: size,
-            //   icon: Icons.email,
-            //   hintText: "College Email",
-            // ),
-
-            // SizedBox(height: size.height * 0.01),
-            // Container(
-            //   padding: EdgeInsets.only(left: 10),
-            //   decoration: BoxDecoration(
-            //       // border: new Border.all(color: Colors.black),
-            //       borderRadius: BorderRadius.circular(20),
-            //       color: Colors.grey[50]),
-            //   width: size.width * 0.8,
-            //   child: TextField(
-            //     obscureText: true,
-            //     decoration: InputDecoration(
-            //         hintText: 'Password',
-            //         icon: Icon(
-            //           Icons.lock,
-            //           color: Colors.grey[900],
-            //         ),
-            //         border: InputBorder.none),
-            //   ),
-            // ),
             Container(
               width: size.width * 0.8,
               alignment: Alignment.bottomRight,
@@ -187,22 +161,7 @@ class _SignInState extends State<SignIn> {
             ),
 
             SizedBox(height: size.height * 0.02),
-            // Button with outline
-            // Container(
-            //   width: size.width * 0.8,
-            //   child: RaisedButton(
-            //     padding: EdgeInsets.symmetric(vertical: 15),
-            //     onPressed: () {},
-            //     color: Colors.grey[100],
-            //     child: Text('LOGIN', style: TextStyle(color: Colors.grey[700])),
-            //     shape: RoundedRectangleBorder(
-            //         side: BorderSide(
-            //             color: Colors.grey[600],
-            //             width: 1,
-            //             style: BorderStyle.solid),
-            //         borderRadius: BorderRadius.circular(50)),
-            //   ),
-            // ),
+
             Container(
               width: size.width * 0.8,
               child: RoundedButton(

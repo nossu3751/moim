@@ -170,7 +170,8 @@ class HomeState extends State<Home>{
                   );
                 }
                 return HighlightText(
-                    text: firstName,
+//                    text: firstName,
+                    text: Constants.myUsername,
                     fontStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)
                 );
               }
